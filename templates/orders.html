@@ -27,6 +27,7 @@
                         <th>Product Quantity</th>
                         <th>Order Date</th>
                         <th>Shipping Date</th>
+                        <th>Delivery Date</th>  <!-- updated field -->
                     </tr>
                 </thead>
                 <tbody>
@@ -40,6 +41,7 @@
                             <td>{{ order.product_quantity }}</td>
                             <td>{{ order.order_date }}</td>
                             <td>{{ order.shipping_date }}</td>
+                            <td>{{ order.delivery_date }}</td>  <!-- Updated field -->
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -73,6 +75,8 @@
                 <input type="text" id="order_date" name="order_date" required><br>
                 <label for="shipping_date">Shipping Date:</label>
                 <input type="text" id="shipping_date" name="shipping_date" required><br>
+                <label for="delivery_date">Delivery Date:</label> <!-- updated field -->
+                <input type="date" id="delivery_date" name="delivery_date"><br><br>  <!-- updated field -->
                 <input type="submit" value="Add Order">
             </form>
         </div>
