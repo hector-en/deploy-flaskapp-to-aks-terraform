@@ -6,6 +6,11 @@ from sqlalchemy import create_engine
 import pyodbc
 import os
 
+curl -sS https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/mssql.gpg
+curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+apt-get update
+ACCEPT_EULA=Y apt-get install -y msodbcsql18
+
 # Initialise Flask App
 app = Flask(__name__)
 
