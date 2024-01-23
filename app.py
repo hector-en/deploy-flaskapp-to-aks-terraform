@@ -6,14 +6,6 @@ from sqlalchemy import create_engine
 import pyodbc
 import os
 
-''' Execute in Shell 
-# Install ODBC Driver 18 for SQL Server for Ubuntu 22.04
-curl -sS https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/mssql.gpg
-curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
-apt-get update
-ACCEPT_EULA=Y apt-get install -y msodbcsql18
-'''
-
 # Initialise Flask App
 app = Flask(__name__)
 
@@ -54,7 +46,6 @@ class Order(Base):
     product_quantity = Column('Product Quantity', Integer)
     order_date = Column('Order Date', DateTime)
     shipping_date = Column('Shipping Date', DateTime)
-    delivery_date = Column('Delivery Date', DateTime) # updated field
 
 # define routes
 # route to display orders
@@ -94,7 +85,6 @@ def add_order():
     product_quantity = request.form.get('product_quantity')
     order_date = request.form.get('order_date')
     shipping_date = request.form.get('shipping_date')
-    delivery_date = request.form['delivery_date'] # updated field
     
     # Create a session to interact with the database
     session = Session()
@@ -108,8 +98,7 @@ def add_order():
         product_code=product_code,
         product_quantity=product_quantity,
         order_date=order_date,
-        shipping_date=shipping_date,
-        delivery_date=delivery_date # updated field
+        shipping_date=shipping_date
     )
 
     # Add the new order to the session and commit to the database
