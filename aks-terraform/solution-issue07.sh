@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -v
 
 : '
 This script appends necessary resources to the existing main.tf file in the networking-module directory for an AKS cluster.

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -v
 
 : '
 This script creates the necessary variables.tf and main.tf files in each module directory: aks-cluster-module and networking-module.
