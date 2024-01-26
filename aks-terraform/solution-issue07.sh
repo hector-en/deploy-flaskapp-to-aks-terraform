@@ -1,7 +1,22 @@
-resource "azurerm_resource_group" "rg" {
-  name     = var.resource_group_name
-  location = var.location
-}
+#!/bin/bash
+
+: '
+This script appends necessary resources to the existing main.tf file in the networking-module directory for an AKS cluster.
+
+The task was to define essential networking resources within the main.tf configuration file of the networking-module. This includes creating a Virtual Network (VNet), two subnets for the control plane and worker nodes, and a Network Security Group (NSG) with two inbound rules.
+
+To run this script, follow these steps:
+
+1. Save this script as solution_issue07.sh in the parent directory of networking-module.
+2. Give execute permissions to the script: chmod +x solution_issue07.sh
+3. Run the script: ./solution_issue07.sh
+'
+
+# Get public IP address
+public_ip=$(curl -s ifconfig.me)
+
+# Append resources to main.tf in networking-module
+cat << EOF >> networking-module/main.tf
 resource "azurerm_virtual_network" "vnet" {
   name                = "aks-vnet"
   resource_group_name = azurerm_resource_group.rg.name
@@ -36,7 +51,7 @@ resource "azurerm_network_security_group" "nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "6443" # default port for kube-apiserver
-    source_address_prefix      = "82.132.219.46"
+    source_address_prefix      = "$public_ip"
     destination_address_prefix = "*"
   }
 
@@ -48,7 +63,8 @@ resource "azurerm_network_security_group" "nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = "82.132.219.46"
+    source_address_prefix      = "$public_ip"
     destination_address_prefix = "*"
   }
 }
+EOF
