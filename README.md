@@ -64,6 +64,14 @@ The steps we took are as follows:
 4. **Define Output Variables for Terraform Networking Module:** We created an `outputs.tf` file to define output variables, which enable us to access and utilize information from the networking module when provisioning the AKS cluster module. The output variables include `vnet_id`, `control_plane_subnet_id`, `worker_node_subnet_id`, `networking_resource_group_name`, and `aks_nsg_id`. [See the wiki page for more details.](link_to_wiki_page_4)
    - Relevant commit: [devops-04: Define output variables for Terraform networking module](link_to_commit_4)
 
+5. **Define Input Variables for AKS Cluster Module:** We created a `variables.tf` file in the `aks-cluster-module` directory to define input variables. These variables allow customization of various aspects of the AKS cluster. [See the wiki page for more details.](link_to_wiki_page_6)
+   - Relevant commit: [devops-05: Define input variables for AKS cluster module](link_to_commit_6)
+
+6. **Define Azure Resources for AKS Cluster in Terraform Configuration:** We defined the necessary Azure resources within the `main.tf` configuration file of the `aks-cluster-module`. These resources include the AKS cluster, node pool, and service principal. [See the wiki page for more details.](link_to_wiki_page_7)
+   - Relevant commit: [devops-06: Define Azure resources for AKS cluster in Terraform configuration](link_to_commit_7)
+
+7. **Define Output Variables for AKS Cluster Module in Terraform Configuration:** We defined output variables within the `outputs.tf` configuration file of the `aks-cluster-module`. These output variables capture essential information about the provisioned AKS cluster. [See the wiki page for more details.](link_to_wiki_page_8)
+   - Relevant commit: [devops-07: Define output variables for AKS cluster module in Terraform configuration](link_to_commit_8)
 ## Getting Started
 
 ### Prerequisites
@@ -100,6 +108,9 @@ We used a feature branch workflow for our development process. Here's an overvie
   - `devops-02`: Define input variables for Terraform modules
   - `devops-03`: Define essential networking resources for the AKS cluster
   - `devops-04`: Define output variables for the Terraform networking module
+  - `devops-05`: Define input variables for AKS cluster module
+  - `devops-06`: Define Azure resources for AKS cluster in Terraform configuration
+  - `devops-07`: Define output variables for AKS cluster module in Terraform configuration
 - `feature-01`: This branch was used for adding the delivery date feature to the application.
 
 Each task was developed in its respective branch and then merged into the `main` branch upon completion.
