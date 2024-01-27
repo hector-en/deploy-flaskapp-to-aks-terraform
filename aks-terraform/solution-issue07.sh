@@ -1,4 +1,4 @@
-#!/bin/bash -v
+#!/bin/bash 
 
 : '
 This script appends necessary resources to the existing main.tf file in the networking-module directory for an AKS cluster.
@@ -68,3 +68,5 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 EOF
+# Print a success message
+echo "networking-module/main.tf has been successfully created with the necessary input variables."

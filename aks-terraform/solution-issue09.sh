@@ -1,4 +1,4 @@
-#!/bin/bash -v
+#!/bin/bash 
 
 # This script creates a variables.tf file in the cluster module directory with the necessary input variables.
 # The task was to define input variables for the AKS cluster module. These variables will allow customization of various aspects of the AKS cluster.
@@ -92,4 +92,4 @@ variable "aks_nsg_id" {
 EOF
 
 # Print a success message
-echo "variables.tf has been successfully created with the necessary input variables."
+echo "aks-cluster-module/variables.tf has been successfully created with the necessary input variables."

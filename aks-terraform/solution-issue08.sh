@@ -1,4 +1,4 @@
-#!/bin/bash -v
+#!/bin/bash 
 
 : '
 This script creates an outputs.tf file in the networking-module directory with the necessary output variables.
@@ -47,3 +47,5 @@ output "aks_nsg_id" {
   value       = azurerm_network_security_group.nsg.id
 }
 EOF
+# Print a success message
+echo "networking-module/outputs.tf has been successfully created with the necessary input variables."

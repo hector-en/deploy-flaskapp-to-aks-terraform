@@ -1,4 +1,4 @@
-#!/bin/bash -v
+#!/bin/bash
 
 : '
 This script creates the necessary variables.tf and main.tf files in each module directory: aks-cluster-module and networking-module.
@@ -65,3 +65,5 @@ resource "azurerm_resource_group" "rg" {
   location = var.location
 }
 EOF
+# Print a success message
+echo "aks-cluster-module/variables.tf has been successfully created with the necessary input variables."
