@@ -1,7 +1,7 @@
 #!/bin/bash 
 
 : '
-This script creates an outputs.tf file in the networking-module directory with the necessary output variables.
+It creates an outputs.tf file in the networking-module directory with the necessary output variables.
 
 The task was to define output variables for the networking-module. These variables will be used to access and utilize information from the networking module when provisioning the AKS cluster module.
 
@@ -15,13 +15,15 @@ The script creates an outputs.tf file with the following output variables:
 
 To run this script, follow these steps:
 
-1. Save this script as solution_issue08.sh in the parent directory of networking-module.
+1. Save this script as solution_issue08.sh in the parent solutions directory of networking-module.
 2. Give execute permissions to the script: chmod +x solution_issue08.sh
 3. Run the script: ./solution_issue08.sh
 '
 
 # Create outputs.tf in networking-module
-cat << EOF > networking-module/outputs.tf
+cat << EOF > ../networking-module/outputs.tf
+# This script was created by solution-issue08.sh.
+
 output "vnet_id" {
   description = "The ID of the Virtual Network"
   value       = azurerm_virtual_network.vnet.id
@@ -37,7 +39,7 @@ output "worker_node_subnet_id" {
   value       = azurerm_subnet.worker_node_subnet.id
 }
 
-output "networking_resource_group_name" {
+output "resource_group_name" {
   description = "The name of the Azure Resource Group where the networking resources were provisioned"
   value       = azurerm_resource_group.rg.name
 }

@@ -1,16 +1,19 @@
 #!/bin/bash 
+: '
+ This script creates a variables.tf file in the cluster module directory with the necessary input variables.
 
-# This script creates a variables.tf file in the cluster module directory with the necessary input variables.
-# The task was to define input variables for the AKS cluster module. These variables will allow customization of various aspects of the AKS cluster.
-# Instructions to run this script:
-# 1. Save this script as solution_issue09.sh in the parent directory of cluster-module-directory.
-# 2. Give execute permissions to the script: chmod +x solution_issue09.sh
-# 3. Run the script: ./solution_issue09.sh
-# Navigate to the cluster module directory
-cd aks-cluster-module
+ The task was to define input variables for the AKS cluster module. These variables will allow customization of various aspects of the AKS cluster.
+ Instructions to run this script:
+
+ 1. Save this script as solution_issue09.sh in the parent solutions directory of cluster-module-directory.
+ 2. Give execute permissions to the script: chmod +x solution_issue09.sh
+ 3. Run the script: ./solution_issue09.sh
+'
 
 # Create the variables.tf file
-cat << EOF > variables.tf
+cat << EOF > ../aks-cluster-module/variables.tf
+# This script was created by solution-issue09.sh.
+
 # Input variable for the name of the AKS cluster to be created.
 # This value will be used when creating the AKS resource in Azure.
 variable "aks_cluster_name" {

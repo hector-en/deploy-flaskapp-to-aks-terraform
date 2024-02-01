@@ -1,16 +1,16 @@
 #!/bin/bash
+: '
+ It creates a main.tf file in the cluster module directory with the necessary Azure resources for provisioning an AKS cluster.
+ Instructions to run this script:
 
-# This script creates a main.tf file in the cluster module directory with the necessary Azure resources for provisioning an AKS cluster.
-
-# Instructions to run this script:
-# 1. Save this script as solution_issue10.sh in the parent directory of cluster-module-directory.
-# 2. Give execute permissions to the script: chmod +x solution_issue10.sh
-# 3. Run the script: ./solution_issue10.sh
-# Navigate to the cluster module directory
-cd aks-cluster-module
-
+ 1. Save this script as solution_issue10.sh in the parent solutions directory of cluster-module-directory.
+ 2. Give execute permissions to the script: chmod +x solution_issue10.sh
+ 3. Run the script: ./solution_issue10.sh
+'
 # Create the main.tf file
-cat << EOF > main.tf
+cat << EOF > ../aks-cluster-module/main.tf
+# This script was created by the solution-issue10.sh script. 
+
 # This resource block creates the AKS cluster.
 resource "azurerm_kubernetes_cluster" "aks" {
   # The name, location, and resource group of the AKS cluster come from input variables defined in variables.tf.
@@ -23,6 +23,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     name       = "default"
     node_count = 1
     vm_size    = "Standard_D2_v2"
+    vnet_subnet_id = var.worker_node_subnet_id  # Corrected line
   }
 
   identity {
@@ -35,17 +36,17 @@ resource "azurerm_kubernetes_cluster" "aks" {
     dns_service_ip     = "10.0.0.10"
     docker_bridge_cidr = "172.17.0.1/16"
     service_cidr       = "10.0.0.0/16"
-
-    # The subnet ID comes from an input variable defined in variables.tf.
-    subnet_id = var.worker_node_subnet_id
+    # Removed the incorrect subnet_id line from her
   }
 
-  # The client_id and client_secret values come from input variables defined in variables.tf.
+/*  
+   # The client_id and client_secret values come from input variables defined in variables.tf.
+   # Starting from version 2.0 of the AzureRM provider for Terraform, the identity block is used to define the identity type of the AKS cluster
   service_principal {
     client_id     = var.service_principal_client_id
     client_secret = var.service_principal_secret
   }
-
+*/
   tags = {
     Environment = "Production"
   }

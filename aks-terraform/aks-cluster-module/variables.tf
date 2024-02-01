@@ -1,3 +1,5 @@
+# This script was created by solution-issue09.sh.
+
 # Input variable for the name of the AKS cluster to be created.
 # This value will be used when creating the AKS resource in Azure.
 variable "aks_cluster_name" {

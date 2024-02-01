@@ -1,12 +1,16 @@
 #!/bin/bash 
-
-# This script creates an outputs.tf file in the cluster module directory with the necessary output variables.
-
-# Navigate to the cluster module directory
-cd aks-cluster-module
-
+: '
+It creates an outputs.tf file in the cluster module directory with the necessary output variables.
+Instructions to run this script:
+ 
+ 1. Save this script as solution_issue10.sh in the parent solutions directory of cluster-module-directory.
+ 2. Give execute permissions to the script: chmod +x solution_issue11.sh
+ 3. Run the script: ./solution_issue11.sh
+ '
 # Create the outputs.tf file
-cat << EOF > outputs.tf
+cat << EOF > ../aks-cluster-module/outputs.tf
+# This script was created by the solution-issue11.sh script. 
+
 # Output variable that stores the name of the provisioned AKS cluster.
 # The value comes from main.tf.
 output "aks_cluster_name" {

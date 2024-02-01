@@ -1,3 +1,5 @@
+# This script was created by solution-issue06.sh
+
 variable "resource_group_name" {
   description = "Represents the Resource Group where networking resources will be deployed."
   type        = string

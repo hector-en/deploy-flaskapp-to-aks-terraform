@@ -1,3 +1,5 @@
+# This script was created by the solution-issue11.sh script. 
+
 # Output variable that stores the name of the provisioned AKS cluster.
 # The value comes from main.tf.
 output "aks_cluster_name" {
