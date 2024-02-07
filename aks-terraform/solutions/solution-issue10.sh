@@ -1,3 +1,14 @@
+#!/bin/bash
+: '
+ It creates a main.tf file in the cluster module directory with the necessary Azure resources for provisioning an AKS cluster.
+ Instructions to run this script:
+
+ 1. Save this script as solution_issue10.sh in the parent solutions directory of cluster-module-directory.
+ 2. Give execute permissions to the script: chmod +x solution_issue10.sh
+ 3. Run the script: ./solution_issue10.sh
+'
+# Create the main.tf file
+cat << EOF > ../aks-cluster-module/main.tf
 # This script was created by the solution-issue10.sh script. 
 
 # This resource block creates the AKS cluster.
@@ -40,3 +51,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     Environment = "Production"
   }
 }
+EOF
+
+# Print a success message
+echo "aks-cluster-module/main.tf has been successfully created with the necessary Azure resources for provisioning an AKS cluster."

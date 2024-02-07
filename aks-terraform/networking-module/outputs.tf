@@ -1,3 +1,5 @@
+# This script was created by solution-issue08.sh.
+
 output "vnet_id" {
   description = "The ID of the Virtual Network"
   value       = azurerm_virtual_network.vnet.id
@@ -13,7 +15,7 @@ output "worker_node_subnet_id" {
   value       = azurerm_subnet.worker_node_subnet.id
 }
 
-output "networking_resource_group_name" {
+output "resource_group_name" {
   description = "The name of the Azure Resource Group where the networking resources were provisioned"
   value       = azurerm_resource_group.rg.name
 }
