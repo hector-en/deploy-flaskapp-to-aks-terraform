@@ -6,6 +6,7 @@ In this fork of the project, we've added Infrastructure as Code (IaC) practices 
 
 We followed a feature branch workflow for our additions and changes. Each task was developed in a separate branch named after the task, then merged into the main branch upon completion.
 
+
 ## Table of Contents
 
 - [Original Web Application](#original-web-application)
@@ -53,25 +54,38 @@ In this fork of the project, we've used Docker to containerize the application. 
 
 We've used Terraform to define the necessary networking resources for our application. Terraform is an IaC tool that allows us to define and provide data center infrastructure using a declarative configuration language. With Terraform, we can manage a wide variety of service providers as well as custom in-house solutions.
 
+## Full Automation of AKS Cluster Deployment
+
+With the latest updates, we have fully automated the deployment of the Azure Kubernetes Service (AKS) cluster. This includes provisioning infrastructure, managing secrets, handling errors gracefully, and ensuring all operations are conducted securely and idempotently.
+
+The automation is achieved through a combination of Terraform configurations and helper scripts, integrated with Azure CLI for resource management and Azure Key Vault for secrets storage. This ensures a streamlined deployment process that is protected against common pitfalls such as configuration drift and exposure of sensitive data.
+
+For more details on the full automation process, please refer to the [DevOps-08 wiki entry](link_to_wiki_page_9).
+
+
 The steps we took are as follows:
 
-2. **Define Input Variables for Terraform Modules:** We created a `variables.tf` file in the `networking-module` directory to define input variables. These variables allow us to customize our Terraform configuration and make it more flexible and reusable. [See the wiki page for more details.](link_to_wiki_page_2)
-   - Relevant commit: [devops-02: Define input variables for Terraform modules](link_to_commit_2)
+2. **Terraform Module Structuring:** We structured our Terraform code into modules, starting with defining input variables in `variables.tf` files within each module directory. This modular approach enhances reusability and maintainability of our IaC setup. [See the wiki page for more details on Terraform module structuring.](link_to_wiki_page_2)
+   - Relevant commit: [devops-02: Terraform module structuring](link_to_commit_2)
 
-3. **Define Essential Networking Resources for AKS Cluster:** We defined several resources in the `main.tf` file, including a Virtual Network (VNet), two subnets, and a Network Security Group (NSG). These resources are necessary for setting up an Azure Kubernetes Service (AKS) cluster, which we use to orchestrate our Docker containers. [See the wiki page for more details.](link_to_wiki_page_3)
+3. **AKS Networking Setup:** We defined several resources in the `main.tf` file, including a Virtual Network (VNet), two subnets, and a Network Security Group (NSG). These resources are necessary for setting up an Azure Kubernetes Service (AKS) cluster, which we use to orchestrate our Docker containers. [See the wiki page for more details.](link_to_wiki_page_3)
    - Relevant commit: [devops-03: Define essential networking resources for AKS cluster](link_to_commit_3)
 
 4. **Define Output Variables for Terraform Networking Module:** We created an `outputs.tf` file to define output variables, which enable us to access and utilize information from the networking module when provisioning the AKS cluster module. The output variables include `vnet_id`, `control_plane_subnet_id`, `worker_node_subnet_id`, `networking_resource_group_name`, and `aks_nsg_id`. [See the wiki page for more details.](link_to_wiki_page_4)
    - Relevant commit: [devops-04: Define output variables for Terraform networking module](link_to_commit_4)
 
-5. **Define Input Variables for AKS Cluster Module:** We created a `variables.tf` file in the `aks-cluster-module` directory to define input variables. These variables allow customization of various aspects of the AKS cluster. [See the wiki page for more details.](link_to_wiki_page_6)
+5. **Define Input Variables for AKS Cluster Module:** We continued by defining input variables for the AKS cluster module in a `variables.tf` file in the `aks-cluster-module` directory. These variables allow customization of the AKS cluster and facilitate the sharing of networking configuration details. [See the wiki page for more details.](link_to_wiki_page_6)
    - Relevant commit: [devops-05: Define input variables for AKS cluster module](link_to_commit_6)
 
-6. **Define Azure Resources for AKS Cluster in Terraform Configuration:** We defined the necessary Azure resources within the `main.tf` configuration file of the `aks-cluster-module`. These resources include the AKS cluster, node pool, and service principal. [See the wiki page for more details.](link_to_wiki_page_7)
+6. **Define Azure Resources for AKS Cluster Configuration:** We defined the necessary Azure resources within the `main.tf` configuration file of the `aks-cluster-module`. These resources include the AKS cluster, node pool, and service principal. [See the wiki page for more details.](link_to_wiki_page_7)
    - Relevant commit: [devops-06: Define Azure resources for AKS cluster in Terraform configuration](link_to_commit_7)
 
-7. **Define Output Variables for AKS Cluster Module in Terraform Configuration:** We defined output variables within the `outputs.tf` configuration file of the `aks-cluster-module`. These output variables capture essential information about the provisioned AKS cluster. [See the wiki page for more details.](link_to_wiki_page_8)
+7. **AKS Cluster Outputs Definition:** We defined output variables within the `outputs.tf` configuration file of the `aks-cluster-module`. These output variables capture essential information about the provisioned AKS cluster. [See the wiki page for more details.](link_to_wiki_page_8)
    - Relevant commit: [devops-07: Define output variables for AKS cluster module in Terraform configuration](link_to_commit_8)
+     
+8. **Full Automation of AKS Cluster Deployment:** Finally, we achieved full automation of the AKS cluster deployment using Terraform and Azure CLI. This includes provisioning infrastructure, managing secrets with Azure Key Vault, and handling errors gracefully. [See the wiki page for more details on full automation of AKS cluster deployment.](link_to_wiki_page_8)
+   - Relevant commit: [devops-08: Full automation of AKS cluster deployment](link_to_commit_8)
+
 ## Getting Started
 
 ### Prerequisites
@@ -104,13 +118,13 @@ We used a feature branch workflow for our development process. Here's an overvie
 
 - `main`: This is the default branch where all changes are merged into once they're ready for production.
 - `devops`: This branch was used for all DevOps tasks related to containerisatoin with Docker and setting up Infrastructure as Code (IaC) with Terraform. The commits in this branch correspond to the following tasks:
-  - `devops-01`: Create Docker image
-  - `devops-02`: Define input variables for Terraform modules
-  - `devops-03`: Define essential networking resources for the AKS cluster
-  - `devops-04`: Define output variables for the Terraform networking module
-  - `devops-05`: Define input variables for AKS cluster module
-  - `devops-06`: Define Azure resources for AKS cluster in Terraform configuration
-  - `devops-07`: Define output variables for AKS cluster module in Terraform configuration
+  - `devops-01`: Dockerfile creation and build
+  - `devops-02`: Terraform module structuring
+  - `devops-03`: AKS networking setup
+  - `devops-05`: AKS cluster variables definition
+  - `devops-06`: AKS cluster resources configuration
+  - `devops-07`: AKS cluster outputs definition
+  - `devops-08`: Full automation of AKS cluster deployment
 - `feature-01`: This branch was used for adding the delivery date feature to the application.
 
 Each task was developed in its respective branch and then merged into the `main` branch upon completion.
