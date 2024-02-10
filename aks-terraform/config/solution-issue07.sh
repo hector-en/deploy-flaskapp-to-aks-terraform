@@ -7,7 +7,7 @@ The task was to define essential networking resources within the main.tf configu
 
 To run this script, follow these steps:
 
-1. Save this script as solution_issue07.sh in the parent solutions directory of networking-module.
+1. Save this script as solution_issue07.sh in the config directory in the aks-terraform main module path.
 2. Give execute permissions to the script: chmod +x solution_issue07.sh
 3. Run the script: ./solution_issue07.sh
 '

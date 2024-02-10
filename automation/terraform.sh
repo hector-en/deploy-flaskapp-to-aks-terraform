@@ -1,3 +1,109 @@
+# Prompts the user with a matrix of options and reads their choice.
+function prompt_user_options() {
+  echo "Please enter a series of digits to configure your environment:"
+  echo "----------------------------------------------------------------"
+  echo "1 - Create a new Azure Keyvault and Service Principal"
+  echo "2 - Re-create module files"
+  
+  if [ -f "tfplans/$1" ]; then
+    echo "3 - Reinitialize the Terraform cluster"
+    echo "----------------------------------------------------------------"
+    echo "Plan: $1"
+    echo "----------------------------------------------------------------"
+    read -p "Hit 'Enter' to apply plan, input digits (e.g., '12') for options: " user_choices
+  else
+    echo "----------------------------------------------------------------"
+    read -p "Press 'Enter' for new workflow, enter digits (e.g., '2') for options: " user_choices
+    # Append option 3 by default if no plan file is found
+    user_choices+="3"
+  fi
+}
+
+# Function to generate a timestamp
+function generate_timestamp() {
+  date +%Y%m%d-%H%M%S
+}
+
+# Function to create a new plan filename with a timestamp
+function create_new_plan_filename() {
+  local timestamp=$(generate_timestamp)
+  echo "tfplan-aks-webapp-${timestamp}"
+}
+
+# Generates a timestamp, creates a new plan filename, and determines the final plan filename.
+function generate_plan_filename() {
+  local new_plan_filename=$(create_new_plan_filename)
+  echo "${1:-$new_plan_filename}"
+}
+# Function to check and install jq if not present
+function ensure_jq_installed() {
+  if ! command -v jq &> /dev/null; then
+    echo "jq could not be found, installing..."
+    sudo apt-get update && sudo apt-get install -y jq
+    echo "jq has been installed successfully."
+  else
+    echo "jq is already installed."
+  fi
+}
+
+# Function to check and install kubectl if not present
+function ensure_kubectl_installed() {
+  if ! command -v kubectl &> /dev/null; then
+    echo "kubectl could not be found, installing..."
+    curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+    chmod +x ./kubectl
+    sudo mv ./kubectl /usr/local/bin/kubectl
+    echo "kubectl has been installed successfully."
+  else
+    echo "kubectl is already installed."
+  fi
+}
+
+# Function to check Azure CLI login status
+function check_azure_cli_login() {
+  az account show &> /dev/null
+  if [ $? -ne 0 ]; then
+    echo "Please log in to the Azure CLI"
+    exit
+  fi
+}
+
+# Prompts user for confirmation to apply a Terraform plan, returning 1 if they decline.
+function confirm_plan_apply() {
+  while true; do
+    read -p "Are you sure you want to apply this Terraform plan? [yes/no]: " yn
+    case $yn in
+        [Yy]* ) break;;
+        [Nn]* ) echo "Apply cancelled by user."; return 1;;
+        * ) echo "Please answer yes or no.";;
+    esac
+  done
+}
+
+# Checks for the existence of a Terraform plan file and returns 1 if not found.
+function check_plan_file_exists() {
+  if [ -f "tfplans/$1" ]; then
+    return 0
+  else
+    echo "Error: Plan file not found at tfplans/$1."
+    return 1
+  fi
+}
+
+# Function to run solution scripts
+function run_solution_scripts() {
+  echo "Running solution scripts to create the required modules..."
+  cd config 
+  ./solution-issue06.sh
+  ./solution-issue07.sh
+  ./solution-issue08.sh
+  ./solution-issue09.sh
+  ./solution-issue10.sh
+  ./solution-issue11.sh
+  ./solution-issue12.sh
+  cd ..
+}
+
 # Function to delete Terraform files in specified directories
 function delete_terraform_files() {
   # Check for any running Terraform processes.
@@ -37,6 +143,51 @@ function delete_terraform_files() {
     echo "File deletion cancelled by user."
   fi
 }
+
+# Function to delete AKS resources
+function delete_aks_resources() {
+  # Retrieve the resource group name from Terraform outputs
+  local resourceGroupName=$(terraform output -raw resource_group_name)
+  
+  # Check if the resourceGroupName variable is set
+  if [ -z "$resourceGroupName" ]; then
+      echo "Error: Unable to retrieve the resource group name from Terraform outputs."
+      exit 1
+  fi
+  
+  # Retrieve the AKS cluster name from the resource group
+  local aksClusterName=$(az aks list --resource-group $resourceGroupName --query "[].name" -o tsv)
+
+  # Check if the AKS cluster name is retrieved
+  if [ -z "$aksClusterName" ]; then
+      echo "Error: Unable to retrieve the AKS cluster name from the resource group."
+      exit 1
+  fi
+
+  # Delete the AKS cluster
+  echo "Deleting the AKS cluster ($aksClusterName)..."
+  az aks delete --name $aksClusterName --resource-group $resourceGroupName --yes --no-wait
+
+  # Retrieve the Key Vault name from Terraform outputs
+#  local keyVaultName=$(terraform output -raw key_vault_name)
+
+  # Check if the Key Vault name is retrieved
+ # if [ -z "$keyVaultName" ]; then
+ #     echo "Error: Unable to retrieve the Key Vault name from Terraform outputs."
+ #     exit 1
+ # fi
+
+  # Delete the Key Vault
+#  echo "Deleting the Key Vault ($keyVaultName)..."
+#  az keyvault delete --name $keyVaultName --resource-group $resourceGroupName
+
+  # Delete the resource group
+  echo "Deleting the resource group ($resourceGroupName)..."
+  az group delete --name $resourceGroupName --yes --no-wait
+
+  echo "The AKS cluster ($aksClusterName) and and resource group ($resourceGroupName) have been deleted."
+}
+
 
 # Function to import multiple resources into Terraform state and reapply the plan.
 import_resource() {
@@ -300,3 +451,5 @@ function apply_terraform_plan_and_handle_errors() {
     fi
   done
 }
+
+echo "Terraform functions are now available."

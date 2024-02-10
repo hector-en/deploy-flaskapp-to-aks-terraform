@@ -5,7 +5,7 @@
  The task was to define input variables for the AKS cluster module. These variables will allow customization of various aspects of the AKS cluster.
  Instructions to run this script:
 
- 1. Save this script as solution_issue09.sh in the parent solutions directory of cluster-module-directory.
+ 1. Save this script as solution_issue09.sh in the config directory in the aks-terraform main module path.
  2. Give execute permissions to the script: chmod +x solution_issue09.sh
  3. Run the script: ./solution_issue09.sh
 '
