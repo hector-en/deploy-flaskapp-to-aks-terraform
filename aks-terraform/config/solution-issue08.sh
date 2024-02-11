@@ -15,7 +15,7 @@ The script creates an outputs.tf file with the following output variables:
 
 To run this script, follow these steps:
 
-1. Save this script as solution_issue08.sh in the parent solutions directory of networking-module.
+1. Save this script as solution_issue08.sh in the config directory in the aks-terraform main module path.
 2. Give execute permissions to the script: chmod +x solution_issue08.sh
 3. Run the script: ./solution_issue08.sh
 '

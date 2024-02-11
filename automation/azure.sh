@@ -312,3 +312,5 @@ function delete_aks_resources() {
     echo "Resource deletion cancelled by user."
   fi
 }
+
+echo "Azure funtions are now available."

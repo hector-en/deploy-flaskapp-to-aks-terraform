@@ -3,7 +3,7 @@
  It creates a main.tf file in the cluster module directory with the necessary Azure resources for provisioning an AKS cluster.
  Instructions to run this script:
 
- 1. Save this script as solution_issue10.sh in the parent solutions directory of cluster-module-directory.
+ 1. Save this script as solution_issue10.sh in the config directory in the aks-terraform main module path.
  2. Give execute permissions to the script: chmod +x solution_issue10.sh
  3. Run the script: ./solution_issue10.sh
 '

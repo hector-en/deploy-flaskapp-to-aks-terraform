@@ -2,49 +2,15 @@
 
 # This script deletes an Azure Kubernetes Service (AKS) cluster, its associated Key Vault, and the resource group.
 
-# Function to delete AKS resources
-delete_aks_resources() {
-  # Retrieve the resource group name from Terraform outputs
-  local resourceGroupName=$(terraform output -raw resource_group_name)
-  
-  # Check if the resourceGroupName variable is set
-  if [ -z "$resourceGroupName" ]; then
-      echo "Error: Unable to retrieve the resource group name from Terraform outputs."
-      exit 1
-  fi
-  
-  # Retrieve the AKS cluster name from the resource group
-  local aksClusterName=$(az aks list --resource-group $resourceGroupName --query "[].name" -o tsv)
+# Define essential variables for Azure and Terraform configurations
+servicePrincipalName="AicoretempWebAppSP" # Service principal name
+resourceGroupName="secrets-rg"            # Existing resource group
+keyVaultName="AicoretempWebappSecrets"    # Key Vault for storing secrets
+aksClusterName="webapp-aks-cluster"       # AKS cluster name
 
-  # Check if the AKS cluster name is retrieved
-  if [ -z "$aksClusterName" ]; then
-      echo "Error: Unable to retrieve the AKS cluster name from the resource group."
-      exit 1
-  fi
-
-  # Delete the AKS cluster
-  echo "Deleting the AKS cluster ($aksClusterName)..."
-  az aks delete --name $aksClusterName --resource-group $resourceGroupName --yes --no-wait
-
-  # Retrieve the Key Vault name from Terraform outputs
-#  local keyVaultName=$(terraform output -raw key_vault_name)
-
-  # Check if the Key Vault name is retrieved
- # if [ -z "$keyVaultName" ]; then
- #     echo "Error: Unable to retrieve the Key Vault name from Terraform outputs."
- #     exit 1
- # fi
-
-  # Delete the Key Vault
-#  echo "Deleting the Key Vault ($keyVaultName)..."
-#  az keyvault delete --name $keyVaultName --resource-group $resourceGroupName
-
-  # Delete the resource group
-  echo "Deleting the resource group ($resourceGroupName)..."
-  az group delete --name $resourceGroupName --yes --no-wait
-
-  echo "The AKS cluster ($aksClusterName) and and resource group ($resourceGroupName) have been deleted."
-}
+# Source automation suite scripts
+source ../automation/terraform.sh || { echo "Failed to source terraform.sh"; exit 1; }
+source ../automation/azure.sh || { echo "Failed to source azure.sh"; exit 1; }
 
 # Ensure the Azure CLI is installed and configured
 if ! command -v az &> /dev/null; then
@@ -58,5 +24,12 @@ if ! az account show > /dev/null; then
     exit 1
 fi
 
+# Fetch Service Principal Id and secrete from KeyVault
+setup_service_principal_env_vars
+
 # Call the function to delete AKS resources
+# terraform destroy -auto-approve
 delete_aks_resources
+
+echo "AKS resource successfully removed."
+

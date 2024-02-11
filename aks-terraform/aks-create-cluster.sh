@@ -37,9 +37,8 @@
 # Main orchestration script for setting up and managing Azure infrastructure with Terraform.
 
 # Source automation suite scripts
-source automation/functions.sh || { echo "Failed to source functions.sh"; exit 1; }
-source automation/azure.sh || { echo "Failed to source azure.sh"; exit 1; }
-source automation/terraform.sh || { echo "Failed to source terraform.sh"; exit 1; }
+source ../automation/azure.sh || { echo "Failed to source azure.sh"; exit 1; }
+source ../automation/terraform.sh || { echo "Failed to source terraform.sh"; exit 1; }
 
 # Define essential variables for Azure and Terraform configurations
 servicePrincipalName="AicoretempWebAppSP" # Service principal name
@@ -78,7 +77,6 @@ fi
 
 if is_selected 2; then
   delete_terraform_files  # Remove existing Terraform files if chosen.
-  create_terraform_configuration_files  # Create new config files.
   run_solution_scripts  # # Execute module creation scripts.
 fi
 
