@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app-service # The name of the service
+spec:
+  selector:
+    app: flask-app # Selector to find the pods this service will route traffic to
+  ports:
+  - protocol: TCP # Protocol used by the service
+    port: 80 # Port that the service listens on
+    targetPort: 5000 # Target port on the pod to forward traffic to
+  type: ClusterIP # Type of service, ClusterIP exposes the service on a cluster-internal IP

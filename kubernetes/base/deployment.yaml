@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-deployment # The name of the deployment
+  labels:
+    app: flask-app # Label to identify the deployment
+spec:
+  replicas: 2 # Number of pod replicas
+  selector:
+    matchLabels:
+      app: flask-app # This should match the label of the pods that are to be selected for this deployment
+  template:
+    metadata:
+      labels:
+        app: flask-app # Label attached to the pod, used by the service to target these pods
+    spec:
+      containers:
+      - name: flask-app-container # Name of the container within the pod
+        image: edunseng/my-flask-webapp:1.0 # The image to use for the container
+        ports:
+        - containerPort: 5000 # The port the container will listen on
+  strategy:
+    type: RollingUpdate # Strategy for updating pods
+    rollingUpdate:
+      maxUnavailable: 1 # Max number of pods that can be unavailable during update
+      maxSurge: 1 # Max number of pods that can be created over the desired number of pods
