@@ -18,9 +18,10 @@ Adhering to a feature branch workflow, tasks are developed on individual branche
    - [Prerequisites](#prerequisites)
    - [Usage](#usage)
 4. [Technology Stack](#technology-stack)
-5. [Branch Structure](#branch-structure)
-6. [Contributors](#contributors)
-7. [License](#license)
+5. [Framework Structure](#framework-structure)
+6. [Git Structure](#git-structure)
+7. [Contributors](#contributors)
+8. [License](#license)
 ## Original Web Application
 
 The original web application provides the following features:
@@ -48,43 +49,45 @@ We've made some changes to the application itself:
 
 ### B) DevOps Enhancements
 
+Our latest enhancements include:
+
+- **Automated Namespace Management**: We've implemented `create-k8s-files.sh` to automate the generation of namespace YAML files for each environment, ensuring isolated workspaces for development, staging, and production.
+- **Script Refinements**: The `create_deployment_files.sh` script has been updated to streamline the deployment process, incorporating namespace setup and RBAC configurations into the workflow.
+- **Context and Namespace Alignment**: Context setting is now managed more efficiently, typically handled by CI/CD pipelines or developers' local setup, aligning `kubectl` with the correct namespaces.
+- **Manifest Customization**: With `create-k8s-files.sh`, Kubernetes manifests are dynamically updated to specify namespaces, ensuring resources are deployed correctly.
+- **RBAC Configuration**: Access within each namespace is controlled through RBAC configurations defined in Kubernetes manifest files, enhancing security.
+- **Resource Quotas**: To prevent any one environment from monopolizing cluster capacity, we've included the generation of ResourceQuota objects within the namespace YAML files.
+- **Ingress for Internal Distribution**: As an alternative to port forwarding, we've proposed using Kubernetes Ingress controllers for scalable internal application distribution.
+
+### Key Milestones
+
+- **Docker Containerization**: Encapsulating the Flask application into a Docker image for compatibility across platforms. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops‐01-(create‐docker‐image)).
+- **Terraform Automation**: Defining data center infrastructure with Terraform to manage service providers and custom solutions efficiently. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops‐08(aks‐terraform‐end‐to‐end)).
+- **AKS Deployment Automation**: Automating the entire lifecycle of the AKS cluster, including provisioning, secrets management, error handling, and secure operations. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/rollout‐01-(kubernetes‐manifest‐file)).
+- **Enhanced Namespace Management and Ingress Integration**: Refining Kubernetes namespace management and integrating Ingress controllers for secure internal application distribution. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/rollout‐02-(enhanced‐deployment‐framework)).
 
 
-In this fork of the project, we've significantly advanced our DevOps capabilities by containerizing the Flask application with Docker, automating the Azure Kubernetes Service (AKS) cluster deployment using Terraform, Azure CLI, and Kubernetes, which embodies the principles of Infrastructure as Code (IaC) and Configuration as Code (CaC). This comprehensive approach ensures consistent application behavior across different environments, streamlines the provisioning and management of necessary networking resources, and leverages Kubernetes for orchestration to maintain high availability and scalability.
+### Progression to Fully Automated AKS Cluster Deployment
 
-### Key achievements include:
+1. **Create Docker Image**: Developed a Dockerfile and built a Docker image for our Flask application, ensuring consistent behavior across different environments. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops‐01-(create‐docker‐image)).
 
-- **Docker Containerization**: We've encapsulated the Flask application and its dependencies into a Docker image for compatibility across any Docker-supported platform. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops%E2%80%9001-(create%E2%80%90docker%E2%80%90image)).
-- **Terraform Automation**: Leveraging Terraform's declarative language, we've defined data center infrastructure to manage various service providers and custom solutions efficiently. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops%E2%80%9008(aks%E2%80%90terraform%E2%80%90end%E2%80%90to%E2%80%90end)).
-- **Full AKS Deployment Automation with Kubernetes**: Our automation covers the entire lifecycle of the AKS cluster, including infrastructure provisioning, secrets management with Azure Key Vault, error handling, and secure operations, while Kubernetes orchestrates the container deployment and scaling. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/rollout%E2%80%9001-(kubernetes%E2%80%90manifest%E2%80%90file)).
-- **Integration and Helper Scripts**: A suite of scripts complements Terraform and Azure CLI to automate deployment processes, address potential errors, and bolster security measures against configuration drift and sensitive data exposure. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/rollout%E2%80%9001-(kubernetes%E2%80%90manifest%E2%80%90file)#automation-process-via-bash-scripts).
+2. **Terraform Module Structuring**: Organized our Terraform code into modules for better reusability and maintainability of our IaC setup. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops‐02-(terraform‐module‐structuring)).
 
-This comprehensive approach not only enhances the deployment process but also reinforces it against common operational challenges, ensuring a robust and reliable DevOps workflow that fully utilizes the capabilities of Kubernetes within the AKS environment.
+3. **AKS Networking Setup**: Configured essential networking resources such as VNet and subnets required for the AKS cluster using Terraform. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops‐03-(aks‐networking‐setup)).
 
-### Key steps towards End-to-End AKS Cluster provision:
+4. **Output Variables for Terraform Networking Module**: Defined output variables in Terraform to facilitate the sharing of networking configuration details when provisioning the AKS cluster module. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops‐04-(terraform‐output‐variables)).
 
-1. **Create Docker Image:** In this step, we created a Dockerfile and built a Docker image for our application. The Dockerfile specifies the base image to use, the necessary dependencies to install, and the commands to run to start the application. Once the Docker image is built, it can be run on any Docker-enabled platform, ensuring consistent behavior across different environments. Relevant wiki: [devops-01(Create Docker image.)](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops%E2%80%9001-(create%E2%80%90docker%E2%80%90image))
+5. **Input Variables for AKS Cluster Module**: Specified input variables for customizing the AKS cluster within the Terraform `aks-cluster-module`. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops‐05-(aks‐cluster‐variables)).
 
-2. **Terraform Module Structuring:** We structured our Terraform code into modules, starting with defining input variables in `variables.tf` files within each module directory. This modular approach enhances reusability and maintainability of our IaC setup. Relevant wiki: [devops‐02 (terraform‐module‐structuring).](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops%E2%80%9002-(terraform%E2%80%90module%E2%80%90structuring))
+6. **Azure Resources for AKS Cluster Configuration**: Defined Azure resources necessary for the AKS cluster configuration in the `main.tf` file of the `aks-cluster-module`. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops‐06-(AKS‐Cluster‐Resources)).
 
-3. **AKS Networking Setup:** We defined several resources in the `main.tf` file, including a Virtual Network (VNet), two subnets, and a Network Security Group (NSG). These resources are necessary for setting up an Azure Kubernetes Service (AKS) cluster, which we use to orchestrate our Docker containers. Relevant wiki: [devops‐03 (aks‐networking‐setup).](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops%E2%80%9003-(aks%E2%80%90networking%E2%80%90setup))
+7. **AKS Cluster Outputs Definition**: Captured essential information about the provisioned AKS cluster through output variables in the `outputs.tf` file of the `aks-cluster-module`. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops‐07-(AKS‐Cluster‐Outputs)).
 
-4. **Define Output Variables for Terraform Networking Module:** We created an `outputs.tf` file to define output variables, which enable us to access and utilize information from the networking module when provisioning the AKS cluster module. The output variables include `vnet_id`, `control_plane_subnet_id`, `worker_node_subnet_id`, `networking_resource_group_name`, and `aks_nsg_id`. Relevant wiki: [devops‐04 (terraform‐output‐variables)](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops%E2%80%9004-(terraform%E2%80%90output%E2%80%90variables))
+8. **Full Automation of AKS Cluster Creation**: Streamlined the AKS cluster creation process with `aks-create-cluster.sh`, automating infrastructure provisioning, secret management, and error handling. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops‐08(aks‐terraform‐end‐to‐end)).
 
-5. **Define Input Variables for AKS Cluster Module:** We continued by defining input variables for the AKS cluster module in a `variables.tf` file in the `aks-cluster-module` directory. These variables allow customization of the AKS cluster and facilitate the sharing of networking configuration details. Relevant wiki: [devops‐05 (aks‐cluster‐variables).](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops%E2%80%9005-(aks%E2%80%90cluster%E2%80%90variables))
+9. **Seamless Flask App Deployment on AKS**: Utilized `aks-deploy-cluster.sh` to deploy our Flask app to AKS with rolling updates, ensuring high availability and zero downtime during updates. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/rollout‐01-(kubernetes‐manifest‐file)).
 
-
-6. **Define Azure Resources for AKS Cluster Configuration:** We defined the necessary Azure resources within the `main.tf` configuration file of the `aks-cluster-module`. These resources include the AKS cluster, node pool, and service principal. [devops‐06 (AKS‐Cluster‐Resources).](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops%E2%80%9006-(AKS%E2%80%90Cluster%E2%80%90Resources))
-
-7. **AKS Cluster Outputs Definition:** We defined output variables within the `outputs.tf` configuration file of the `aks-cluster-module`. These output variables capture essential information about the provisioned AKS cluster. Relevant wiki: [devops‐07 (AKS‐Cluster‐Outputs).](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops%E2%80%9007-(AKS%E2%80%90Cluster%E2%80%90Outputs))
-     
-8. **Full Automation of AKS Cluster Creation with Terraform and Bash** 
-   We've automated the Azure Kubernetes Service (AKS) cluster creation `aks-create-cluster.sh`, streamlining infrastructure provisioning, secret management, and error handling with Terraform (IaC). This robust process safeguards against configuration drift and data exposure. More details: [devops‐08(aks‐terraform‐end‐to‐end)](https://github.com/edunseng/Web-App-DevOps-Project/wiki/devops%E2%80%9008(aks%E2%80%90terraform%E2%80%90end%E2%80%90to%E2%80%90end)).
-
-9. **Seamless Flask App Deployment on AKS with Rolling Updates via Kubernetes** 
-Our Flask app now deploys seamlessly wtih the automation script `aks-deploy-cluster.sh` to AKS with Terraform and Kubernetes (CaC), using rolling updates for high availability.
-   For more information on the deployment process and the automation scripts used, please refer to the [rollout‐01 (kubernetes-manifest-file)](https://github.com/edunseng/Web-App-DevOps-Project/wiki/rollout%E2%80%9001-(kubernetes%E2%80%90manifest%E2%80%90file)).
-
+10. **Enhanced Namespace Management and Ingress Integration**: Refined Kubernetes namespace management and introduced Ingress controllers for secure internal application distribution. [More details](https://github.com/edunseng/Web-App-DevOps-Project/wiki/rollout-02-(enhanced‐deployment‐framework)).
 ## Getting Started
 
 ### Prerequisites
@@ -98,11 +101,18 @@ For the application to succesfully run, you need to install the following packag
 
 ### Usage
 
-To run the application, you simply need to run the `app.py` script in this repository. Once the application starts you should be able to access it locally at `http://127.0.0.1:5000`. Here you will be meet with the following two pages:
+To run the application locally, execute the `app.py` script within this repository. The application will be accessible at `http://127.0.0.1:5000`, where you can navigate through the Order List Page or add new orders via the Add New Order Page.
 
-1. **Order List Page:** Navigate to the "Order List" page to view all existing orders. Use the pagination controls to navigate between pages.
+For deployment to an AKS cluster:
 
-2. **Add New Order Page:** Click on the "Add New Order" tab to access the order form. Complete all required fields and ensure that your entries meet the specified criteria.
+1. Confirm that the `PROJECT_ENVIRONMENTS` variable in `cluster-config.sh` is set with the desired environments (e.g., `dev`, `staging`, `prod`).
+2. Initialize the environment configurations by running `bash init.sh`.
+3. Apply Kubernetes configurations across environments with `bash rollout.sh <environment>`, ensuring `<environment>` matches one from `cluster-config.sh`.
+4. Deploy the application to the AKS cluster using `bash deploy.sh <environment>`.
+-  (Optional) Access the deployed application via port forwarding with `kubectl port-forward svc/my-app-service 5000:80 -n <namespace>`, substituting `<namespace>` with The appropriate namespace for your environment. The `deploy.sh` script includes this step.
+5. The application will remain accessible at `http://127.0.0.1:5000`.
+
+These steps provide a streamlined process for both local execution and full AKS deployment, catering to various stages of development and testing.
 
 ## Technology Stack
 
@@ -112,24 +122,63 @@ To run the application, you simply need to run the `app.py` script in this repos
 - **Infrastructure as Code (IaC):** Terraform is used to define and provide data center infrastructure using a declarative configuration language.
 - **Containerization:** Docker is used to package the application and its dependencies into a standardized unit for software development.
 **Configuration as Code (CaC):** Kubernetes is utilized to automate the deployment, scale, and manage the containerized application, ensuring consistent environment setup across development, testing, and production.
-## Branch Structure
 
-We used a feature branch workflow for our development process. Here's an overview of the branches we used:
+## Framework Structure
 
-- `main`: This is the default branch where all changes are merged into once they're ready for production.
-- `devops`: This branch was used for all DevOps tasks related to containerisatoin with Docker and setting up Infrastructure as Code (IaC) with Terraform. The commits in this branch correspond to the following tasks:
-  - `devops-01`: Dockerfile creation and build
-  - `devops-02`: Terraform module structuring
-  - `devops-03`: AKS networking setup
-  - `devops-05`: AKS cluster variables definition
-  - `devops-06`: AKS cluster resources configuration
-  - `devops-07`: AKS cluster outputs definition
-  - `devops-08`: Full automation of AKS cluster creation
-  - `rollout-01`: Initiate Rolling Update Deployment
+The project's framework is meticulously organized into key directories, each tailored to facilitate specific aspects of the DevOps workflow. Each directory includes a `readme.txt` file that provides detailed explanations of its contents and usage:
 
-- `feature-01`: This branch was used for adding the delivery date feature to the application.
+- **cluster-management**: Manages the lifecycle of Kubernetes clusters.
+  - `cluster-config.sh`: Configures environment-specific variables.
+  - `cluster-output.sh`: Retrieves outputs from Terraform state.
+  - `delete-cluster.sh`: Safely deletes Kubernetes clusters.
+  - `devops-config.sh`: Sets up Azure DevOps configurations.
+  - `readme.txt`: Describes the purpose and functionality of scripts within this directory.
 
-Each task was developed in its respective branch and then merged into the `main` branch upon completion.
+- **libraries**: Houses shared utility scripts for various operations.
+  - `azure_commands.sh`: Azure resource management functions.
+  - `dialog-utilities.sh`: Interactive user input prompts.
+  - `error-handler.sh`: Error handling for Terraform processes.
+  - `file-utilities.sh`: File manipulation utilities.
+  - `terraform_commands.sh`: Terraform-specific command functions.
+  - `readme.txt`: Provides insights into the library scripts and their applications.
+
+- **project-setup/my-flask-webapp**: Contains setup scripts for the Flask web application.
+  - `create-aks-module.sh`: Generates AKS Terraform configurations.
+  - `create-k8s-files.sh`: Creates Kubernetes manifests.
+  - `create-network-module.sh`: Produces network-related Terraform configs.
+  - `create_deployment_files.sh`: Generates Kubernetes deployment scripts.
+  - `setup-root-configuration.sh`: Establishes root Terraform configurations.
+  - `readme.txt`: Offers guidance on setting up and deploying the Flask application.
+
+- **utilities**: Provides additional support for deployment and management tasks.
+  - `azure.sh`: Handles Azure resource management with error handling.
+  - `kubernetes.sh`: Manages Kubernetes resources via kubectl.
+  - `terraform.sh`: Assists with Terraform infrastructure provisioning.
+  - `readme.txt`: Details the utilities available and how to utilize them in the project.
+
+This structured approach underscores our dedication to modular and scalable infrastructure management, adhering to the latest DevOps best practices for efficient and maintainable workflows.
+## Git Structure
+
+Our development process adheres to a feature branch workflow, ensuring organized and manageable code changes. Here's an overview of the branches we used:
+
+- `main`: The primary branch where all finalized changes are merged for production release.
+- `devops`: Dedicated to comprehensive DevOps tasks, this branch includes containerization with Docker and Infrastructure as Code (IaC) setup using Terraform. It encompasses a series of task-specific branches:
+  - `devops-01`: Creation and building of the Dockerfile.
+  - `devops-02`: Structuring of Terraform modules for better modularity.
+  - `devops-03`: Setup of AKS networking resources.
+  - `devops-05`: Definition of AKS cluster variables.
+  - `devops-06`: Configuration of AKS cluster resources.
+  - `devops-07`: Definition of AKS cluster output variables.
+  - `devops-08`: Automation of the entire AKS cluster creation process.
+- `rollout`: This branch serves as the hub for our deployment enhancements, focusing on streamlining the delivery pipeline and optimizing Kubernetes configurations. It branches out into specific updates that incrementally improve our deployment strategy:
+
+  - `rollout-01`: Orchestrates rolling updates to achieve zero-downtime deployments, ensuring high availability of services during updates.
+  - `rollout-02`: Introduces sophisticated namespace management techniques and leverages Ingress controllers to facilitate secure and scalable internal service exposure
+  
+- `feature-01`: Utilized for developing the new delivery date feature within the application.
+
+Each feature or task is meticulously developed within its respective branch before being reviewed and merged into the `main` branch.
+
 ## Contributors 
 
 - [Maya Iuga]([https://github.com/yourusername](https://github.com/maya-a-iuga))
