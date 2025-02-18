@@ -5,14 +5,14 @@
 # Define the list of environments for which to create overlays i.e ("Testing" "Production")
 export PROJECT_ENVIRONMENTS=("testing" "staging" "production")
 # Tag info
-Project="my-flask-webapp"
-Owner="AicoreTemp"
+Project="neogenomics"
+Owner="NeoGenomics"
 
 # Prerequisite for Terraform cluster creation 
-servicePrincipalName="AiCoreTempMyFlaskWebApp"  # Service principal name
+servicePrincipalName="NeoGenomicsTempMyWebApp"  # Service principal name
 Secrets_rg="secrets-rg"                         # Resource group for credential storage vault
-KEY_VAULT_NAME="AiCoreTempKeyVault2"            # Key Vault for storing secrets
-AKS_CLUSTER_NAME="aks-cluster-aicoretemp"       # AKS cluster name
+KEY_VAULT_NAME="NeogenomicsTempKeyVault"        # Key Vault for storing secrets
+AKS_CLUSTER_NAME="aks-cluster-neogenomics"      # AKS cluster name
 tfplan_prefix="tfplan-aks-webapp"               # Prefix for naming Terraform plan files
 public_ip=$(curl -s ifconfig.me) 
 

@@ -3,14 +3,14 @@ from sqlalchemy import create_engine, Column, Integer, String, DateTime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
-import pyodbc
-import os
+#import pyodbc
+#import urllib.parse
 
 # Initialise Flask App
 app = Flask(__name__)
 
 # database connection 
-server = 'devops-project-server.database.windows.net'
+server = 'aicore-devops-project-server.database.windows.net'
 database = 'orders-db'
 username = 'maya'
 password = 'AiCore1237'
