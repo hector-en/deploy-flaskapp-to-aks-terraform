@@ -5,7 +5,7 @@ on:
   push:
     paths:
       - 'src/**' # Trigger only when src/ changes
-    branches: [ main, neogenomics ]
+    branches: [ main ]
     tags: [ 'v*.*.*' ]
   workflow_dispatch: # ✅ Enables manual triggering
 
