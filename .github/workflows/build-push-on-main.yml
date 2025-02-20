@@ -1,5 +1,5 @@
 # .github/workflows/docker-build-push-deploy.yml
-name: Docker Build-Push-Deploy
+name: Docker Build-Push - main
 
 on:
   push:
@@ -84,26 +84,3 @@ jobs:
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
-  #deploy:
-  #  needs: build-and-push
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - name: Checkout Code
-  #      uses: actions/checkout@v4
-#
-  #    - name: Determine Terraform Workspace
-  #      id: tf-workspace
-  #      run: |
-  #        if [[ $GITHUB_REF == refs/tags/* ]]; then
-  #          echo "TERRAFORM_WORKSPACE=prod" >> $GITHUB_ENV
-  #        else
-  #          echo "TERRAFORM_WORKSPACE=testing" >> $GITHUB_ENV
-  #        fi
-#
-  #    - name: Deploy to Cluster
-  #      run: |
-  #        chmod +x deploy.sh
-  #        ./deploy.sh ${{ env.TERRAFORM_WORKSPACE }}
-  #      env:
-  #        # Azure credentials for AKS access
-  #        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
