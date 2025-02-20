@@ -34,5 +34,8 @@ RUN pip install --trusted-host pypi.python.org -r requirements.txt
 # Step 5 - Expose port 
 EXPOSE 5000
 
-# Start Flask app with Gunicorn
+# Step 6 - Testing Environment
+#CMD ["python", "app.py", "--host=0.0.0.0", "--port=5000"]
+
+# Start Flask app with Gunicorn in Production env
 CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
