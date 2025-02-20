@@ -47,9 +47,6 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y ansible
-
-    - name: Debug Directory Structure
-      run: ll -R ${{ github.workspace }}//src
     
     - name: Change directory src access
       run: |
