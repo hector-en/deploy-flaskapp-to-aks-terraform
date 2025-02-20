@@ -5,7 +5,7 @@ on:
   push:
     paths:
       - 'src/**' # Trigger only when src/ changes
-    branches: [ main ]
+    branches: [ neogenomics ]
     tags: [ 'v*.*.*' ]
 
 jobs:
