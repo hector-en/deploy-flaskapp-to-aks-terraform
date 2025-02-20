@@ -38,9 +38,10 @@ jobs:
         fi
         
     - name: Run Ansible Playbook
-      uses: ansible/ansible-action@master
+      uses: robertdebock/ansible-action@main
       with:
         playbook: ansible/playbooks/build/docker-build-push.yml
+        options: "--inventory inventory.ini"
       env:
         VERSION_TAG: ${{ env.TAG_VERSION }}  # Pass the sanitized tag
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
