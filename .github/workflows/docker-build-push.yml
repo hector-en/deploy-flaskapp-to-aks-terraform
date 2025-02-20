@@ -50,7 +50,10 @@ jobs:
     - name: Run Ansible Playbook
       run: |
         cd ${{ github.workspace }}  # Ensure we're in the right directory
-        ansible-playbook -i localhost, ansible/playbooks/build/docker-build-push.yml -e "build_path=src/"
+        ansible-playbook -i localhost, ansible/playbooks/build/docker-build-push.yml \
+          -e "build_path=${{ github.workspace }}/src" \
+          -e "VERSION_TAG=${{ env.TAG_VERSION }}"
+          
       env:
         VERSION_TAG: ${{ env.TAG_VERSION }}  # Pass the sanitized tag
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
