@@ -50,7 +50,7 @@ jobs:
     - name: Run Playbook - Docker Build and Push
       run: |
         cd ${{ github.workspace }}  # Ensure we're in the right directory
-        ansible-playbook -i localhost, ansible/playbooks/build/docker-build-push.yml \
+        ansible-playbook -i localhost, ansible/playbooks/build/docker-build-push-on-tag.yml \
           -e "build_path=${{ github.workspace }}/src" \
           -e "VERSION_TAG=${{ env.TAG_VERSION }}"
 
