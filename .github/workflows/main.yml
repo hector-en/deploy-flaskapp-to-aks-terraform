@@ -1,5 +1,5 @@
 # .github/workflows/docker-build-push.yml
-name: Docker Build and Push
+name: Docker Build-Push-Deploy
 
 on:
   push:
