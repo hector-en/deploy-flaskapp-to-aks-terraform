@@ -1,0 +1,60 @@
+# .github/workflows/docker-build-push.yml
+name: Docker Build on New Tag - neogenomics
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Trigger only on tags matching v*.*.*
+  workflow_dispatch:  # ✅ Enables manual triggering
+
+jobs:
+  build-and-push:
+    if: github.ref == 'refs/heads/neogenomics' || startsWith(github.ref, 'refs/tags/')  
+    # Ensure it only runs for neogenomics branch or tags
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Determine Version Tag
+      id: version
+      # Docker tags align with Git tags:  v1.2.3 -> 1.2.3 & feature/new-ui -> feature-new-ui
+      run: |
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION="${GITHUB_REF#refs/tags/}"
+          SANITIZED_VERSION="${VERSION//v/}"          # Remove "v"
+          SANITIZED_VERSION="${SANITIZED_VERSION//\//-}"  # Replace "/" with "-"
+          echo "TAG_VERSION=$SANITIZED_VERSION" >> $GITHUB_ENV
+        else
+          echo "TAG_VERSION=latest" >> $GITHUB_ENV
+        fi
+    
+    - name: Set HOME to GitHub Workspace
+      run: |
+        echo "HOME=${{ github.workspace }}" >> $GITHUB_ENV
+
+    - name: Install Ansible
+      run: |
+        sudo apt update
+        sudo apt install -y ansible
+
+    - name: Run Playbook - Docker Build and Push
+      run: |
+        cd ${{ github.workspace }}  # Ensure we're in the right directory
+        ansible-playbook -i localhost, ansible/playbooks/build/docker-build-push-on-tag.yml \
+          -e "build_path=${{ github.workspace }}/src" \
+          -e "VERSION_TAG=${{ env.TAG_VERSION }}"
+
+      env:
+        VERSION_TAG: ${{ env.TAG_VERSION }}  # Pass the sanitized tag
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

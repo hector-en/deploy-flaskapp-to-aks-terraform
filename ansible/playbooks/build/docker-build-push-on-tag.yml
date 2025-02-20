@@ -1,0 +1,36 @@
+# ansible/playbooks/build/docker-build-push.yml
+---
+- name: Build and Push Docker Image with Versioning
+  hosts: localhost
+  connection: local
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    docker_registry: "docker.io"
+    image_name: "edunseng/my-flask-webapp"
+    version_tag: "{{ VERSION_TAG | default(lookup('env', 'VERSION_TAG')) | default('latest') }}"
+    docker_username: "{{ lookup('env', 'DOCKERHUB_USERNAME') }}"
+    docker_password: "{{ lookup('env', 'DOCKERHUB_TOKEN') }}"
+    build_path: "{{ lookup('env', 'HOME') }}/src" # Ensure this is the correct path
+
+  tasks:
+  - name: Login to Docker Hub
+    command: >
+      docker login -u {{ docker_username }} -p {{ docker_password }}
+
+  - name: Build Docker Image
+    command: >
+      docker build -t {{ image_name }}:{{ version_tag }} {{ build_path }}
+      
+  - name: Tag as Latest (if versioned)
+    command: >
+      docker tag {{ image_name }}:{{ version_tag }} {{ image_name }}:latest
+    when: version_tag != 'latest'
+    
+  - name: Push Versioned Image
+    command: >
+      docker push {{ image_name }}:{{ version_tag }}
+
+  - name: Push Latest Tag
+    command: >
+      docker push {{ image_name }}:latest
+    when: version_tag != 'latest'

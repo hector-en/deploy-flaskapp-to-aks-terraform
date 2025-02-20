@@ -121,9 +121,6 @@ spec:
         env:  # Define environment variables here
         - name: $lower_env
           value: "$lower_env"
-        envFrom:
-        - secretRef:
-            name: sql-secret  # Injects all secrets as environment variables
         resources:
           # ✅ Added resource requests and limits
           requests:
