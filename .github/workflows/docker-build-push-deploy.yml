@@ -1,4 +1,4 @@
-# .github/workflows/docker-build-push.yml
+# .github/workflows/docker-build-push-deploy.yml
 name: Docker Build-Push-Deploy
 
 on:
@@ -54,7 +54,7 @@ jobs:
     - name: Run Ansible Playbook
       run: |
         cd ${{ github.workspace }}  # Ensure we're in the right directory
-        ansible-playbook ansible/playbooks/build/docker-build-push.yml -e "build_path=${{ github.workspace }}/src"
+        ansible-playbook ansible/playbooks/build/docker-build-push-deploy.yml -e "build_path=${{ github.workspace }}/src"
       env:
         VERSION_TAG: ${{ env.TAG_VERSION }}  # Pass the sanitized tag
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
