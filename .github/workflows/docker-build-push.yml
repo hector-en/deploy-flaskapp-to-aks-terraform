@@ -5,8 +5,6 @@ on:
   push:
     tags:
       - 'v*.*.*'  # Trigger only on tags matching v*.*.*
-    branches:
-      - 'neogenomics'  # Trigger only on the neogenomics branch
   workflow_dispatch:  # ✅ Enables manual triggering
 
 jobs:
