@@ -5,22 +5,23 @@
 # Define the list of environments for which to create overlays i.e ("Testing" "Production")
 export PROJECT_ENVIRONMENTS=("testing" "staging" "production")
 # Tag info
-Project="my-flask-webapp"
-Owner="AicoreTemp"
-
+export TF_VAT_Project="neogenomics"
+export TF_VAR_Owner="NeoGenomics"
+export TF_VAT_Location="uksouth"
 # Prerequisite for Terraform cluster creation 
-servicePrincipalName="AiCoreTempMyFlaskWebApp"  # Service principal name
-Secrets_rg="secrets-rg"                         # Resource group for credential storage vault
-KEY_VAULT_NAME="AiCoreTempKeyVault2"            # Key Vault for storing secrets
-AKS_CLUSTER_NAME="aks-cluster-aicoretemp"       # AKS cluster name
-tfplan_prefix="tfplan-aks-webapp"               # Prefix for naming Terraform plan files
-public_ip=$(curl -s ifconfig.me) 
+export servicePrincipalName="NeoGenomicsTempMyWebApp"  # Service principal name
+export Secrets_rg="secrets-rg"                         # Resource group for credential storage vault
+export RG_LOCATION="UK South"
+export KEY_VAULT_NAME="NeogenomicsTempKeyVault"        # Key Vault for storing secrets
+export AKS_CLUSTER_NAME="aks-cluster-neogenomics"      # AKS cluster name
+export tfplan_prefix="tfplan-aks-webapp"               # Prefix for naming Terraform plan files
+export public_ip=$(curl -s ifconfig.me) 
 
 
 
 # Framework Structure definitions
 export SCRIPTS_DIR="$PROJECT_ROOT/framework"
-export PROJECT_SETUP_DIR="$SCRIPTS_DIR/project-setup/$Project"
+export PROJECT_SETUP_DIR="$SCRIPTS_DIR/project-setup/$TF_VAT_Project"
 # Terraform configuration directories
 export TF_ENV_DIR="$PROJECT_ROOT/terraform"
 export TF_PLANS_DIR="$TF_ENV_DIR/.plans"
@@ -53,6 +54,7 @@ source "$SCRIPTS_DIR/utilities/kubernetes.sh" || { echo "Failed to source $SCRIP
   mkdir -p "$TF_ENV_DIR" && chown "$(whoami)":"$(whoami)" "$TF_ENV_DIR"
   mkdir -p "$TF_AKS_MODULE_FILES_DIR" && chown "$(whoami)":"$(whoami)" "$TF_AKS_MODULE_FILES_DIR"
   mkdir -p "$TF_NETWORK_MODULE_FILES_DIR" && chown "$(whoami)":"$(whoami)" "$TF_NETWORK_MODULE_FILES_DIR"
-  mkdir -p "$BASE_DIR" && chown "$(whoami)" "$BASE_DIR"
-  mkdir -p "$OVERLAYS_DIR" && chown "$(whoami)" "$OVERLAYS_DIR"
+  mkdir -p "$BASE_DIR" && chown "$(whoami)":"$(whoami)" "$BASE_DIR"
+  mkdir -p "$OVERLAYS_DIR" && chown "$(whoami)":"$(whoami)" "$OVERLAYS_DIR"
+  mkdir -p "$TF_PLANS_DIR" && chown "$(whoami)":"$(whoami)" "$TF_PLANS_DIR"
 } || { echo "Failed to create directories or change ownership"; exit 1; }

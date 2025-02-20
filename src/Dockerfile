@@ -35,4 +35,4 @@ RUN pip install --trusted-host pypi.python.org -r requirements.txt
 EXPOSE 5000
 
 # Step 6 - Define Startup Command
-CMD ["python", "app.py"]
+CMD ["python", "app.py", "--host=0.0.0.0", "--port=5000"]

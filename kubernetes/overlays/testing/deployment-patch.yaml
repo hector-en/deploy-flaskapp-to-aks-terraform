@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-deployment
+  labels:
+    env: testing
+spec:
+  template:
+    metadata:
+      labels:
+        app: flask-app
+        env: testing
+    spec:
+      containers:
+      - name: flask-app-container
+        image: edunseng/my-flask-webapp:1.0
+        envFrom:
+        - secretRef:
+            name: sql-secret # Injects all secrets as environment variables

@@ -1,0 +1,50 @@
+fix_aks_nsg.yml
+---
+- name: Fix AKS NSG and Connectivity Issues
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    resource_group: "network-rg-testing"
+    vnet_name: "aks-vnet-testing"
+    subnet_name: "aks-subnet"
+    nsg_name: "aks-nsg-testing"
+    aks_rg: "aks-rg-testing"
+    aks_cluster: "aks-cluster-neogenomics-testing"
+
+  tasks:
+  - name: Get the AKS subnet ID
+    command: >
+      az aks show --resource-group {{ aks_rg }} --name {{ aks_cluster }} --query "agentPoolProfiles[].vnetSubnetId" --output tsv
+    register: aks_subnet_id
+    changed_when: false
+
+  - name: Attach NSG to AKS Subnet
+    command: >
+      az network vnet subnet update --resource-group {{ resource_group }} --vnet-name {{ vnet_name }} --name {{ subnet_name }} --network-security-group {{ nsg_name }}
+    when: aks_subnet_id.stdout | length > 0
+
+  - name: Ensure NSG rule exists for AKS API (Port 6443)
+    command: >
+      az network nsg rule create --resource-group {{ resource_group }} --nsg-name {{ nsg_name }} --name kube-apiserver-rule --priority 1001 --destination-port-ranges 6443 --protocol Tcp --access Allow --direction Inbound --source-address-prefixes Internet --destination-address-prefixes "*"
+    ignore_errors: yes
+
+  - name: Ensure NSG rule exists for AKS Node Communication (Port 10250)
+    command: >
+      az network nsg rule create --resource-group {{ resource_group }} --nsg-name {{ nsg_name }} --name Allow-K8s-Node --priority 1003 --destination-port-ranges 10250 --protocol Tcp --access Allow --direction Inbound --source-address-prefixes VirtualNetwork --destination-address-prefixes VirtualNetwork
+    ignore_errors: yes
+
+  - name: Refresh AKS Credentials for kubectl
+    command: >
+      az aks get-credentials --resource-group {{ aks_rg }} --name {{ aks_cluster }} --overwrite-existing
+    changed_when: false
+
+  - name: Verify Kubernetes Connection
+    command: kubectl get nodes
+    register: kubectl_result
+    changed_when: false
+    ignore_errors: yes
+
+  - name: Show Kubernetes Nodes Output
+    debug:
+      msg: "{{ kubectl_result.stdout_lines }}"

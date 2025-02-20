@@ -31,6 +31,7 @@ user_choices="${1:-"1"}"  # Options: 1 (setup & terraform) 2 (terraform only) 3 
 # Ensure necessary tools are installed
 ensure_jq_installed
 ensure_kubectl_installed
+setup_env_vars # write env variables
 
 # Function to check if a digit is in the user's choices
 is_selected() {
@@ -39,13 +40,12 @@ is_selected() {
 
 # Execute actions based on user's choices using a case statement
 case "$user_choices" in
-  *3*) # infracstructure and full workflow
+  *3*) # infracstructure, terraform and kubernetes workflow
     confirm_delete="Yes" # Hardcoded for automation
     run_setup_scripts # Execute module creation scripts.
     ;&  # Fall-through to next pattern  
-  *2*) # full terraform workflow
+  *2*) # terraform workflow with apply
     echo "Initialising AKS Cluster ..."
-    setup_env_vars
     terraform_init #|| exit 1
     terrafor_plan
     #confirm_plan_apply
@@ -66,7 +66,7 @@ case "$user_choices" in
     verify_and_check_aks_cluster
     ;;
   *1*) # infrastructure only
-    confirm_delete="Yes" # Hardcoded for automation
+    confirm_delete="Yes" # Hardcoded for automation    
     run_setup_scripts # Execute module creation scripts.
     ;;
 esac
