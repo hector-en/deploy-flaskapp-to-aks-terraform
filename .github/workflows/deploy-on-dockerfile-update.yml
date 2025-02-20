@@ -5,12 +5,14 @@ on:
     branches:
       - main
     paths:
-      - "Dockerfile"  # Trigger only if Dockerfile is updated
+      - "src/Dockerfile"  # Trigger only if Dockerfile is updated
   pull_request:
     branches:
       - main
     paths:
-      - "Dockerfile"
+      - "src/Dockerfile"
+  workflow_dispatch:  # ✅ Enables manual triggering
+
 
 jobs:
   deploy:

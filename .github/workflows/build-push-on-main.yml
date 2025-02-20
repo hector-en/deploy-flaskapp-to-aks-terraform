@@ -74,10 +74,15 @@ jobs:
         echo "HOME=${{ github.workspace }}" >> $GITHUB_ENV
 
         
-    - name: Run Ansible Playbook
+    - name: Run Ansible Build and Push
       run: |
         cd ${{ github.workspace }}  # Ensure we're in the right directory
         ansible-playbook -i localhost, ansible/playbooks/build/docker-build-push.yml -e "build_path=src/"
+
+    - name: Run Ansible Deploy to AKS
+      run: |
+        cd ${{ github.workspace }}  # Ensure we're in the right directory
+        ansible-playbook -i localhost, ansible/playbooks/build/deploy-on-dockerfile-update.yml"
         
       env:
         VERSION_TAG: ${{ env.TAG_VERSION }}  # Pass the sanitized tag
