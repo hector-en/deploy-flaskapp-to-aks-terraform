@@ -43,31 +43,31 @@ jobs:
           echo "TAG_VERSION=latest" >> $GITHUB_ENV
         fi
 
-    - name: Debug - List workspace contents
-      run: |
-        echo "Current workspace: ${{ github.workspace }}"
-        ls -la ${{ github.workspace }}
-
-    - name: Debug - Check permissions for all files
-      run: |
-        ls -lR ${{ github.workspace }}
-        
-    - name: Debug - Show environment variables
-      run: env
-
-    - name: Debug - Check if src exists
-      run: |
-        if [ -d "${{ github.workspace }}/src" ]; then
-          echo "✅ src directory found!"
-          ls -la ${{ github.workspace }}/src
-        else
-          echo "❌ src directory is MISSING!"
-        fi
-
-    - name: Install Ansible
-      run: |
-        sudo apt update
-        sudo apt install -y ansible
+    #- name: Debug - List workspace contents
+    #  run: |
+    #    echo "Current workspace: ${{ github.workspace }}"
+    #    ls -la ${{ github.workspace }}
+#
+    #- name: Debug - Check permissions for all files
+    #  run: |
+    #    ls -lR ${{ github.workspace }}
+    #    
+    #- name: Debug - Show environment variables
+    #  run: env
+#
+    #- name: Debug - Check if src exists
+    #  run: |
+    #    if [ -d "${{ github.workspace }}/src" ]; then
+    #      echo "✅ src directory found!"
+    #      ls -la ${{ github.workspace }}/src
+    #    else
+    #      echo "❌ src directory is MISSING!"
+    #    fi
+#
+    #- name: Install Ansible
+    #  run: |
+    #    sudo apt update
+    #    sudo apt install -y ansible
 
     - name: Set HOME to GitHub Workspace
       run: |
