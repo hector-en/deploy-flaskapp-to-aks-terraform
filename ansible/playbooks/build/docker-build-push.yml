@@ -7,43 +7,30 @@
     ansible_python_interpreter: /usr/bin/python3
     docker_registry: "docker.io"
     image_name: "edunseng/my-flask-webapp"
-    # Check for Ansible variable first, then environment variable, then default
     version_tag: "{{ VERSION_TAG | default(lookup('env', 'VERSION_TAG')) | default('latest') }}"
     docker_username: "{{ lookup('env', 'DOCKERHUB_USERNAME') }}"
     docker_password: "{{ lookup('env', 'DOCKERHUB_TOKEN') }}"
+    build_path: "{{ lookup('env', 'HOME') }}/src" # Ensure this is the correct path
 
   tasks:
-  - name: Login to Docker Registry
-    community.docker.docker_login:
-      username: "{{ docker_username }}"
-      password: "{{ docker_password }}"
-      registry: "{{ docker_registry }}"
+  - name: Login to Docker Hub
+    command: >
+      docker login -u {{ docker_username }} -p {{ docker_password }}
 
-  - name: Build Docker image
-    community.docker.docker_image:
-      name: "{{ image_name }}"
-      tag: "{{ version_tag }}"
-      source: build
-      build:
-        path: "{{ lookup('env', 'HOME') }}/src" # Looks for Dockerfile in playbook dir
-        dockerfile: Dockerfile
+  - name: Build Docker Image
+    command: >
+      docker build -t {{ image_name }}:{{ version_tag }} {{ build_path }}
 
   - name: Tag as Latest (if versioned)
-    community.docker.docker_image:
-      name: "{{ image_name }}:{{ version_tag }}" # Source image (1.3)
-      repository: "{{ image_name }}:latest" # Target tag (latest)
-      source: local
+    command: >
+      docker tag {{ image_name }}:{{ version_tag }} {{ image_name }}:latest
     when: version_tag != 'latest'
 
   - name: Push Versioned Image
-    community.docker.docker_image:
-      name: "{{ image_name }}:{{ version_tag }}" # Explicitly include the versioned tag
-      push: yes
-      source: local
+    command: >
+      docker push {{ image_name }}:{{ version_tag }}
 
   - name: Push Latest Tag
-    community.docker.docker_image:
-      name: "{{ image_name }}:latest" # Explicitly reference the latest tag
-      push: yes
-      source: local
+    command: >
+      docker push {{ image_name }}:latest
     when: version_tag != 'latest'
