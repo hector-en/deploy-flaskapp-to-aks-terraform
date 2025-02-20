@@ -12,6 +12,11 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout Full Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Ensure full repository is cloned
+
     - name: Checkout code
       uses: actions/checkout@v4
 
@@ -42,9 +47,13 @@ jobs:
         sudo apt update
         sudo apt install -y ansible
 
+    - name: Debug Directory Structure
+      run: ls -R ${{ github.workspace }}
+    
     - name: Run Ansible Playbook
-      run: ansible-playbook ansible/playbooks/build/docker-build-push.yml
-
+      run: |
+        cd ${{ github.workspace }}  # Ensure we're in the right directory
+        ansible-playbook ansible/playbooks/build/docker-build-push.yml -e "build_path=${{ github.workspace }}/src"
       env:
         VERSION_TAG: ${{ env.TAG_VERSION }}  # Pass the sanitized tag
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
