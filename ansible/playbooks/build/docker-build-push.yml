@@ -2,6 +2,7 @@
 ---
 - name: Build and Push Docker Image with Versioning
   hosts: localhost
+  connection: local
   vars:
     ansible_python_interpreter: /usr/bin/python3
     docker_registry: "docker.io"
