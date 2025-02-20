@@ -47,16 +47,11 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y ansible
-    
-    - name: Fix permissions for src directory
-      run: |
-        sudo chown -R $(whoami) ${{ github.workspace }}/neogenomics/src
-        sudo chmod -R 755 ${{ github.workspace }}/neogenomics/src  
-          
+              
     - name: Run Ansible Playbook
       run: |
         cd ${{ github.workspace }}  # Ensure we're in the right directory
-        ansible-playbook -i localhost, ansible/playbooks/build/docker-build-push.yml -e "build_path=${{ github.workspace }}/src"
+        ansible-playbook -i localhost, ansible/playbooks/build/docker-build-push.yml -e "build_path=${{ github.workspace }}/neogenomics/src"
       env:
         VERSION_TAG: ${{ env.TAG_VERSION }}  # Pass the sanitized tag
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
