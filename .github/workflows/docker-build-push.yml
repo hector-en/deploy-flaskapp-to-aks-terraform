@@ -3,10 +3,11 @@ name: Docker Build Push - neogenomics
 
 on:
   push:
-    paths:
-      - 'src/**' # Trigger only when src/ changes
-    branches: [ neogenomics ]
-    tags: [ 'v*.*.*' ]
+    tags:
+      - 'v*.*.*'  # Trigger only on tags matching v*.*.*
+    branches:
+      - 'neogenomics'  # Trigger only on the neogenomics branch
+  workflow_dispatch:  # ✅ Enables manual triggering
 
 jobs:
   build-and-push:
@@ -36,14 +37,20 @@ jobs:
         else
           echo "TAG_VERSION=latest" >> $GITHUB_ENV
         fi
+    
+    - name: Set HOME to GitHub Workspace
+      run: |
+        echo "HOME=${{ github.workspace }}" >> $GITHUB_ENV
+
     - name: Install Ansible
       run: |
         sudo apt update
         sudo apt install -y ansible
 
     - name: Run Ansible Playbook
-      run: ansible-playbook ansible/playbooks/build/docker-build-push.yml
-
+      run: |
+        cd ${{ github.workspace }}  # Ensure we're in the right directory
+        ansible-playbook -i localhost, ansible/playbooks/build/docker-build-push.yml -e "build_path=src/ VERSION_TAG=${{ env.TAG_VERSION }}"
       env:
         VERSION_TAG: ${{ env.TAG_VERSION }}  # Pass the sanitized tag
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
