@@ -52,7 +52,8 @@ jobs:
       run: ll -R ${{ github.workspace }}//src
     
     - name: Change directory src access
-      run: chown ${{whoami}}.root ${{ github.workspace }}//src -R
+      run: |
+        sudo chown -R $(whoami):$(whoami) ${{ github.workspace }}/src
     
     - name: Run Ansible Playbook
       run: |
