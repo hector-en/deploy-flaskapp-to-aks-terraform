@@ -40,6 +40,9 @@ source "$PROJECT_ROOT/framework/cluster-management/cluster-output.sh" || {
   exit 1
 }
 
+# Connect to cluster
+kubectl config use-context $CURRENT_AKS_CLUSTER_NAME
+
 # Deploy Kubernetes resources using Kustomize or Helm.
 if [ -d "$PROJECT_ROOT/kubernetes/overlays/$ENVIRONMENT" ]; then
   # Using Kustomize.

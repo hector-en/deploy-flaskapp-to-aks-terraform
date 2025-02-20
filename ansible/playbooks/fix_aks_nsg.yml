@@ -34,6 +34,11 @@
       az network nsg rule create --resource-group {{ resource_group }} --nsg-name {{ nsg_name }} --name Allow-K8s-Node --priority 1003 --destination-port-ranges 10250 --protocol Tcp --access Allow --direction Inbound --source-address-prefixes VirtualNetwork --destination-address-prefixes VirtualNetwork
     ignore_errors: yes
 
+  - name: Ensure NSG rule exists for HTTP (Port 80)
+    command: >
+      az network nsg rule create --resource-group {{ resource_group }} --nsg-name {{ nsg_name }} --name AllowHTTP --priority 100 --destination-port-ranges 80 --protocol Tcp --access Allow --direction Inbound --source-address-prefixes Internet --destination-address-prefixes "*"
+    ignore_errors: yes
+
   - name: Refresh AKS Credentials for kubectl
     command: >
       az aks get-credentials --resource-group {{ aks_rg }} --name {{ aks_cluster }} --overwrite-existing
