@@ -32,6 +32,7 @@ user_choices="${1:-"1"}"  # Options: 1 (setup & terraform) 2 (terraform only) 3 
 ensure_jq_installed
 ensure_kubectl_installed
 setup_env_vars # write env variables
+ensure_ansible_installed
 
 # Function to check if a digit is in the user's choices
 is_selected() {

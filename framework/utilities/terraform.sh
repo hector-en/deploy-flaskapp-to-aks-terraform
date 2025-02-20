@@ -1,3 +1,4 @@
+#!/bin/bash
 #terraform.sh:
 # Source Terraform Libraries
 source "$SCRIPTS_DIR/libraries/error-handler.sh" || { echo "Failed to source $SCRIPTS_DIR/libraries/error-handler.sh"; exit 1; }
@@ -33,6 +34,30 @@ function ensure_kubectl_installed() {
     echo "kubectl is already installed."
   fi
 }
+
+# Function to check and install Ansible if not present
+function ensure_ansible_installed() {
+  if ! command -v ansible &> /dev/null; then
+    echo "Ansible could not be found, installing..."
+    
+    # Update package lists
+    sudo apt update -y
+    
+    # Install Ansible
+    sudo apt install -y ansible
+
+    # Verify installation
+    if command -v ansible &> /dev/null; then
+      echo "Ansible has been installed successfully."
+    else
+      echo "Ansible installation failed. Please check your system and try again."
+      exit 1
+    fi
+  else
+    echo "Ansible is already installed."
+  fi
+}
+
 
 # Function retrieves and sets Service Principal credentials as environment variables for Terraform.
 function setup_env_vars() {

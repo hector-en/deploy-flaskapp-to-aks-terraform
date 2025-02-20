@@ -26,7 +26,7 @@ else \
 fi
 
 # Install pip and setuptools
-RUN pip install --upgrade pip setuptools
+RUN pip install --upgrade pip setuptools wheel
 
 # Step 4 - Install Python packages specified in requirements.txt
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
@@ -34,5 +34,5 @@ RUN pip install --trusted-host pypi.python.org -r requirements.txt
 # Step 5 - Expose port 
 EXPOSE 5000
 
-# Step 6 - Define Startup Command
-CMD ["python", "app.py", "--host=0.0.0.0", "--port=5000"]
+# Start Flask app with Gunicorn
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
