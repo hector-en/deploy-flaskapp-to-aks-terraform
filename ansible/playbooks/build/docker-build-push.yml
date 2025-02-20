@@ -24,7 +24,7 @@
       tag: "{{ version_tag }}"
       source: build
       build:
-        path: "{{ lookup('env', 'HOME') }}/neogenomics/src" # Looks for Dockerfile in playbook dir
+        path: "{{ lookup('env', 'HOME') }}/src" # Looks for Dockerfile in playbook dir
         dockerfile: Dockerfile
 
   - name: Tag as Latest (if versioned)
