@@ -1,4 +1,4 @@
-fix_aks_nsg.yml
+#fix_aks_nsg.yml
 ---
 - name: Fix AKS NSG and Connectivity Issues
   hosts: localhost
@@ -7,7 +7,7 @@ fix_aks_nsg.yml
   vars:
     resource_group: "network-rg-testing"
     vnet_name: "aks-vnet-testing"
-    subnet_name: "aks-subnet"
+    subnet_name: "worker-node-subnet-testing"
     nsg_name: "aks-nsg-testing"
     aks_rg: "aks-rg-testing"
     aks_cluster: "aks-cluster-neogenomics-testing"

@@ -1,4 +1,3 @@
-#!/bin/bash
 # file-utilities.sh
 
 # Define ANSI color codes for colored output

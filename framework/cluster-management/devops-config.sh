@@ -1,4 +1,3 @@
-#!/bin/bash
 # devops-config.sh
 
 # Azure DevOps configuration variables

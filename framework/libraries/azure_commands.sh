@@ -41,24 +41,31 @@ grant_sp_keyvault_access() {
         return 1
     fi
 
-    echo "Key Vault Name: $key_vault_name"
-    echo "Service Principal Application (Client) ID: $service_principal_app_id"
-    
-    # Grant the Service Principal access to the Key Vault secrets
-    az keyvault set-policy --name "$key_vault_name" \
-                           --spn "$service_principal_app_id" \
-                           --secret-permissions get list set delete #recover backup restore purge
-    delete > /dev/null 2>&1
-    
-    if [ $? -eq 0 ]; then
-        echo "Access policy set successfully for Service Principal on Key Vault '$key_vault_name'."
-        return 0
-    else
-        echo "Failed to set access policy for Service Principal on Key Vault '$key_vault_name'."
-        return 1
-    fi
-}
+# Debug output
+echo "Key Vault Name: $key_vault_name"
+echo "Service Principal Application (Client) ID: $service_principal_app_id"
 
+# Get subscription ID and resource group
+YOUR_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+YOUR_RESOURCE_GROUP=$(az keyvault show --name "$key_vault_name" --query "resourceGroup" -o tsv)
+
+# Grant the Service Principal access to the Key Vault secrets
+az role assignment create --assignee "$service_principal_app_id" \
+                          --role "Key Vault Secrets Officer" \
+                          --scope "/subscriptions/$YOUR_SUBSCRIPTION_ID/resourceGroups/$YOUR_RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$key_vault_name"
+
+# Check if the Service Principal has access
+KeyVault_access=$(az role assignment list --assignee "$service_principal_app_id" --scope "/subscriptions/$YOUR_SUBSCRIPTION_ID/resourceGroups/$YOUR_RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$key_vault_name")
+
+# Verify if KeyVault_access is empty
+if [ -z "$KeyVault_access" ]; then
+    echo "❌ ERROR: KeyVault access failed (Empty)! Exiting..."
+    exit 1
+else
+    echo "✅ SUCCESS: KeyVault access Successful!"
+    exit 0
+fi
+}
 
 function create_or_display_resource_group_info() {
   RESSOURCE_GROUP_NAME=$1
@@ -71,6 +78,7 @@ function create_or_display_resource_group_info() {
     az group create --name $RESSOURCE_GROUP_NAME --location $RG_LOCATION
 
   else
+   echo "Resource group already exists."
     :
     # echo "Displaying the Resource Group information ($RESSOURCE_GROUP_NAME)..."
     # az group show --name $RESSOURCE_GROUP_NAME

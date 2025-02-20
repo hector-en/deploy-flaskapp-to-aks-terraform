@@ -201,7 +201,6 @@ terraform workspace select "\$ENVIRONMENT" || terraform workspace new "\$ENVIRON
       exit 1
       ;;
   esac
-  ;;
 # Verify and check the AKS cluster
 switch_to_workspace "\${ENVIRONMENT}" || exit 1
 # Check the rollout status of the deployment
