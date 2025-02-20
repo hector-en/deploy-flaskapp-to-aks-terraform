@@ -36,12 +36,14 @@ jobs:
         else
           echo "TAG_VERSION=latest" >> $GITHUB_ENV
         fi
-        
+    - name: Install Ansible
+      run: |
+        sudo apt update
+        sudo apt install -y ansible
+
     - name: Run Ansible Playbook
-      uses: robertdebock/ansible-action@main
-      with:
-        playbook: ansible/playbooks/build/docker-build-push.yml
-        options: "--inventory inventory.ini"
+      run: ansible-playbook ansible/playbooks/build/docker-build-push.yml
+
       env:
         VERSION_TAG: ${{ env.TAG_VERSION }}  # Pass the sanitized tag
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
