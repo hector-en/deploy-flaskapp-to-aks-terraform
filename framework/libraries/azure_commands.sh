@@ -132,7 +132,8 @@ confirm_azure_resources_match() {
     local sp_match=$(az ad sp list --display-name "$servicePrincipalName" --query "[?displayName=='$servicePrincipalName'].displayName" -o tsv)
     if [ "$sp_match" != "$servicePrincipalName" ]; then
         echo "Error: Service Principal '$servicePrincipalName' does not match the expected value."
-        read -p "Do you want to create a new Service Principal (y/n)? " yn
+        yn="Y"
+        #read -p "Do you want to create a new Service Principal (y/n)? " yn
         case $yn in
             [Yy]* ) automatic_sp_operations "create_new_sp";;
             [Nn]* ) automatic_sp_operations "enter_new_sp";;
@@ -145,8 +146,9 @@ confirm_azure_resources_match() {
     if [ "$rg_match" != "$Secrets_rg" ]; then
         echo "Error: Resource Group '$Secrets_rg' does not match the expected value."
         read -p "Do you want to create the Resource Group (y/n)? " yn
+        #yn="Y"
         case $yn in
-            [Yy]* ) az group create --name "$Secrets_rg" --location "$RG_LOCATION";;
+            [Yy]* ) read -p az group create --name "$Secrets_rg" --location "$RG_REGION";;
             [Nn]* ) echo "Resource Group creation skipped."; exit 1;;
             * ) echo "Please answer yes or no."; exit 1;;
         esac

@@ -140,7 +140,8 @@ automatic_sp_operations() {
 # Function to handle missing service principal credentials
 handle_missing_sp_credentials() {
     echo "The Client ID or Client Secret could not be found in Key Vault '$KEY_VAULT_NAME'."
-    read -p "Would you like to create a new Service Principal or reset the existing credentials? (create/reset/quit): " user_action
+    user_action="reset"
+    #read -p "Would you like to create a new Service Principal or reset the existing credentials? (create/reset/quit): " user_action
 
     case $user_action in
         create)

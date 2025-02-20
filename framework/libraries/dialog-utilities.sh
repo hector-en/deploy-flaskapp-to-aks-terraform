@@ -103,7 +103,8 @@ function present_plan_options_and_apply() {
 
 # Prompts user for confirmation to switch on error handling.
 function confirm_error_handling() {
-  read -p "Would you like to switch on error handling? [yes/no]: " yn
+  #read -p "Would you like to switch on error handling? [yes/no]: " yn
+  yn="Y"
   case $yn in
       [Yy]* ) 
         echo -e "${GREEN}Error handling has been switched ON.${NC}"

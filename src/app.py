@@ -3,34 +3,48 @@ from sqlalchemy import create_engine, Column, Integer, String, DateTime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
-#import pyodbc
-#import urllib.parse
+import os # to read Secrets from Kubernetes
+import urllib.parse
 
 # Initialise Flask App
 app = Flask(__name__)
 
-# database connection 
-server = 'aicore-devops-project-server.database.windows.net'
-database = 'orders-db'
-username = 'maya'
-password = 'AiCore1237'
-driver= '{ODBC Driver 18 for SQL Server}'
+# Function to read Kubernetes-mounted secrets
+def get_k8s_secret(secret_name, default_value=None):
+    """Retrieve secrets from Kubernetes (or fallback to env variables)."""
+    secret_path = f"/mnt/secrets/{secret_name}"
+    try:
+        with open(secret_path, "r") as secret_file:
+            return secret_file.read().strip()
+    except FileNotFoundError:
+        return os.getenv(secret_name, default_value)
 
-# Create the connection string
-connection_string=f'Driver={driver};\
-    Server=tcp:{server},1433;\
-    Database={database};\
-    Uid={username};\
-    Pwd={password};\
-    Encrypt=yes;\
-    TrustServerCertificate=no;\
-    Connection Timeout=30;'
+# Read database credentials securely
+DB_SERVER = get_k8s_secret("DB_SERVER")
+DB_DATABASE = get_k8s_secret("DB_DATABASE")
+DB_USERNAME = get_k8s_secret("DB_USERNAME")
+DB_PASSWORD = get_k8s_secret("DB_PASSWORD")
+
+# URL-encode password for security
+encoded_password = urllib.parse.quote_plus(DB_PASSWORD)
+
+# Create SQLAlchemy connection string
+connection_string = (
+    f"mssql+pyodbc://{DB_USERNAME}:{encoded_password}@{DB_SERVER}/{DB_DATABASE}"
+    "?driver=ODBC+Driver+18+for+SQL+Server&Encrypt=yes&TrustServerCertificate=yes"
+)
 
 # Create the engine to connect to the database
-engine = create_engine("mssql+pyodbc:///?odbc_connect={}".format(connection_string))
-engine.connect()
+engine = create_engine(connection_string)
 
-# Create the Session
+# Test the database connection
+try:
+    with engine.connect() as conn:
+        print("✅ Database connection successful!")
+except Exception as e:
+    print(f"❌ Database connection failed: {e}")
+
+# Create a session factory
 Session = sessionmaker(bind=engine)
 
 # Define the Order data model
