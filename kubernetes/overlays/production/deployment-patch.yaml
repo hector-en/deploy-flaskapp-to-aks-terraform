@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-deployment
+  labels:
+    env: production
+spec:
+  template: #applies to pods
+    metadata:
+      labels:
+        app: flask-app
+        env: production
+    spec:
+      containers:
+      - name: flask-app-container
+        image: edunseng/my-flask-webapp:latest # Always pull the latest image
+        imagePullPolicy: Always  # Force Kubernetes to always pull the latest image
+        env:  # Define environment variables here
+        - name: production
+          value: "production"
+        envFrom:
+        - secretRef:
+            name: sql-secret  # Injects all secrets as environment variables
+        resources:
+          # ✅ Added resource requests and limits
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
