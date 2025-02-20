@@ -11,6 +11,8 @@ on:
 
 jobs:
   build-and-push:
+    if: github.ref == 'refs/heads/neogenomics' || startsWith(github.ref, 'refs/tags/')  
+    # Ensure it only runs for neogenomics branch or tags
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
