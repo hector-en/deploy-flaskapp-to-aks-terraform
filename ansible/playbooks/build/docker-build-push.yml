@@ -20,12 +20,12 @@
   - name: Build Docker Image
     command: >
       docker build -t {{ image_name }}:{{ version_tag }} {{ build_path }}
-
+      
   - name: Tag as Latest (if versioned)
     command: >
       docker tag {{ image_name }}:{{ version_tag }} {{ image_name }}:latest
     when: version_tag != 'latest'
-
+    
   - name: Push Versioned Image
     command: >
       docker push {{ image_name }}:{{ version_tag }}
