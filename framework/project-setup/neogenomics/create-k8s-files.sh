@@ -124,6 +124,14 @@ spec:
         envFrom:
         - secretRef:
             name: sql-secret  # Injects all secrets as environment variables
+        resources:
+          # ✅ Added resource requests and limits
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
 EOF
 create_config_file "$overlay_dir" "deployment-patch.yaml" "$overlay_deployment_patch_content"
   
@@ -136,9 +144,15 @@ metadata:
   labels:
     env: $lower_env  # Environment label for the Service
 spec:
+  type: LoadBalancer # for external IP
   selector:
     app: flask-app
     env: $lower_env  # Selector to match pods with these labels
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+
 EOF
 create_config_file "$overlay_dir" "service-patch.yaml" "$overlay_service_patch_content"
 

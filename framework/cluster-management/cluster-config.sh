@@ -12,7 +12,7 @@ export TF_VAT_Location="uksouth"
 export servicePrincipalName="NeoGenomicsTempMyWebApp"  # Service principal name
 export Secrets_rg="secrets-rg"                         # Resource group for credential storage vault
 export RG_LOCATION="UK South"
-export KEY_VAULT_NAME="NeogenomicsTempKeyVault"        # Key Vault for storing secrets
+export KEY_VAULT_NAME="NeoGenSecretsKeyVault"                # Key Vault for storing secrets
 export AKS_CLUSTER_NAME="aks-cluster-neogenomics"      # AKS cluster name
 export tfplan_prefix="tfplan-aks-webapp"               # Prefix for naming Terraform plan files
 export public_ip=$(curl -s ifconfig.me) 
@@ -51,10 +51,10 @@ source "$SCRIPTS_DIR/utilities/kubernetes.sh" || { echo "Failed to source $SCRIP
 
 # Create directories and set ownership.
 {
-  mkdir -p "$TF_ENV_DIR" && chown "$(whoami)":"$(whoami)" "$TF_ENV_DIR"
-  mkdir -p "$TF_AKS_MODULE_FILES_DIR" && chown "$(whoami)":"$(whoami)" "$TF_AKS_MODULE_FILES_DIR"
-  mkdir -p "$TF_NETWORK_MODULE_FILES_DIR" && chown "$(whoami)":"$(whoami)" "$TF_NETWORK_MODULE_FILES_DIR"
-  mkdir -p "$BASE_DIR" && chown "$(whoami)":"$(whoami)" "$BASE_DIR"
-  mkdir -p "$OVERLAYS_DIR" && chown "$(whoami)":"$(whoami)" "$OVERLAYS_DIR"
-  mkdir -p "$TF_PLANS_DIR" && chown "$(whoami)":"$(whoami)" "$TF_PLANS_DIR"
+  mkdir -p "$TF_ENV_DIR" && sudo chown "$(whoami)":"$(whoami)" "$TF_ENV_DIR"
+  mkdir -p "$TF_AKS_MODULE_FILES_DIR" && sudo chown "$(whoami)":"$(whoami)" "$TF_AKS_MODULE_FILES_DIR"
+  mkdir -p "$TF_NETWORK_MODULE_FILES_DIR" && sudo chown "$(whoami)":"$(whoami)" "$TF_NETWORK_MODULE_FILES_DIR"
+  mkdir -p "$BASE_DIR" && sudo chown "$(whoami)":"$(whoami)" "$BASE_DIR"
+  mkdir -p "$OVERLAYS_DIR" && sudo chown "$(whoami)":"$(whoami)" "$OVERLAYS_DIR"
+  mkdir -p "$TF_PLANS_DIR" && sudo chown "$(whoami)":"$(whoami)" "$TF_PLANS_DIR"
 } || { echo "Failed to create directories or change ownership"; exit 1; }

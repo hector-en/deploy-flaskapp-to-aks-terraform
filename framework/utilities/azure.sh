@@ -1,4 +1,3 @@
-#!/bin/bash
 # azure.sh
 # This script contains functions for creating and deleting Azure resources.
 # The create_new_sp_and_keyvault function checks if the AKS cluster and Key Vault exist, and creates them using the create_keyvault_and_store_secrets function if they don't.
@@ -140,8 +139,8 @@ automatic_sp_operations() {
 # Function to handle missing service principal credentials
 handle_missing_sp_credentials() {
     echo "The Client ID or Client Secret could not be found in Key Vault '$KEY_VAULT_NAME'."
-    user_action="reset"
-    #read -p "Would you like to create a new Service Principal or reset the existing credentials? (create/reset/quit): " user_action
+    #user_action="reset"
+    read -p "Would you like to create a new Service Principal or reset the existing credentials? (create/reset/quit): " user_action
 
     case $user_action in
         create)

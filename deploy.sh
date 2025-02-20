@@ -1,3 +1,4 @@
+#!/bin/bash
 # Environment-specific deployment.
 # Usage: ./deploy.sh <environment>
 # Filename: deploy.sh
@@ -51,11 +52,30 @@ else
   echo "No Kubernetes overlay found for environment: $ENVIRONMENT."
   exit 1
 fi
-verify_deployment "$CURRENT_AKS_CLUSTER_NAME" "$ENVIRONMENT" "flask-app-service" "flask-app-deployment"
-# Initiate port forwarding to access the application locally
-LOCAL_PORT=5000
-REMOTE_PORT=5000
-POD_SELECTOR="app=flask-app"
-start_port_forwarding "$LOCAL_PORT" "$REMOTE_PORT" "$POD_SELECTOR"
 
+# Check if the deployment actually needs an update
+CURRENT_IMAGE=$(kubectl get deployment flask-app-deployment -n $ENVIRONMENT -o jsonpath='{.spec.template.spec.containers[0].image}')
+LATEST_IMAGE="edunseng/my-flask-webapp:latest"
+
+if [[ "$CURRENT_IMAGE" != "$LATEST_IMAGE" ]]; then
+  echo -e "${GREEN}🔄 New image detected! Updating deployment...${NC}"
+  kubectl set image deployment/flask-app-deployment flask-app-container=$LATEST_IMAGE -n $ENVIRONMENT
+else
+  echo -e "${YELLOW}\✅ No new image detected. Skipping restart.${NC}"
+fi
+
+verify_deployment "$CURRENT_AKS_CLUSTER_NAME" "$ENVIRONMENT" "flask-app-service" "flask-app-deployment"
+
+# Check for external IP before port-forwarding
+EXTERNAL_IP=$(kubectl get svc flask-app-service -n $ENVIRONMENT -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+if [[ -n "$EXTERNAL_IP" ]]; then
+  echo -e "${GREEN}✅ App is accessible at: http://$EXTERNAL_IP:5000${NC}"
+else
+  echo -e "${YELLOW}⚠️ No external IP found! Starting port-forwarding...${NC}"
+  LOCAL_PORT=5000
+  REMOTE_PORT=5000
+  POD_SELECTOR="app=flask-app"
+  start_port_forwarding "$LOCAL_PORT" "$REMOTE_PORT" "$POD_SELECTOR"
+fi
 popd # Return to the original directory.
