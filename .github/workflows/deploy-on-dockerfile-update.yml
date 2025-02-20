@@ -1,4 +1,4 @@
-name: Deploy on Dockerfile Update - testing
+name: Deploy on Dockerfile Update
 
 on:
   push:
