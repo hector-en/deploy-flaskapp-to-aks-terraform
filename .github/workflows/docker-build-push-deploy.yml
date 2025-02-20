@@ -49,12 +49,15 @@ jobs:
         sudo apt install -y ansible
 
     - name: Debug Directory Structure
-      run: ls -R ${{ github.workspace }}
+      run: ll -R ${{ github.workspace }}//src
+    
+    - name: Change directory src access
+      run: chown ${{whoami}}.root ${{ github.workspace }}//src -R
     
     - name: Run Ansible Playbook
       run: |
         cd ${{ github.workspace }}  # Ensure we're in the right directory
-        ansible-playbook ansible/playbooks/build/docker-build-push.yml -e "build_path=${{ github.workspace }}/src"
+        ansible-playbook -i localhost, ansible/playbooks/build/docker-build-push.yml -e "build_path=${{ github.workspace }}/src"
       env:
         VERSION_TAG: ${{ env.TAG_VERSION }}  # Pass the sanitized tag
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
