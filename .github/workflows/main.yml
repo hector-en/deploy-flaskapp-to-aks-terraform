@@ -7,6 +7,7 @@ on:
       - 'src/**' # Trigger only when src/ changes
     branches: [ main, neogenomics ]
     tags: [ 'v*.*.*' ]
+  workflow_dispatch: # ✅ Enables manual triggering
 
 jobs:
   build-and-push:
