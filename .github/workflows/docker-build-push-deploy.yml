@@ -72,7 +72,7 @@ jobs:
     - name: Run Ansible Playbook
       run: |
         cd ${{ github.workspace }}  # Ensure we're in the right directory
-        ansible-playbook -i localhost, ansible/playbooks/build/docker-build-push.yml -e "build_path=${{ github.workspace }}/neogenomics/src"
+        ansible-playbook -i localhost, ansible/playbooks/build/docker-build-push.yml -e "build_path=src/"
       env:
         VERSION_TAG: ${{ env.TAG_VERSION }}  # Pass the sanitized tag
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
