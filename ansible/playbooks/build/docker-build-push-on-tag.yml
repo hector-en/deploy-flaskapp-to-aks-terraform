@@ -35,9 +35,9 @@
   - name: Push Latest Tag
     command: >
       docker push {{ image_name }}:latest
-    when: version_tag != 'latest'
+    #when: version_tag != 'latest'
 
-  # rollout command with conditional
+    # rollout command with conditional
   - name: Restart Kubernetes deployment if needed
     command: kubectl rollout restart deployment/flask-app-deployment -n testing
     when:
