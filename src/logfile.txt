@@ -1,5 +1,5 @@
 Main branch builds: 
- - 01: Merged dev to main on 21/02: updated the latest dockerfile which includes gunicorn deployment.
+ - 01: Merged dev into main to update the `latest` tag.
 
 
 Dev branch tags:
