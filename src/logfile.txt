@@ -1,0 +1,7 @@
+Main branch builds: 
+ - 01: Merged dev to main on 21/02: updated the latest dockerfile which includes gunicorn deployment.
+
+
+Dev branch tags:
+ - 2.0.0: hardcoded db connection strings to test the app.
+ - 3.0.0: flask app runs on gunicorn.
