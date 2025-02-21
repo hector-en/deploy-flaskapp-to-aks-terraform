@@ -11,6 +11,8 @@
     version_tag: "{{ VERSION_TAG | default(lookup('env', 'VERSION_TAG')) | default('latest') }}"
     docker_username: "{{ lookup('env', 'DOCKERHUB_USERNAME') }}"
     docker_password: "{{ lookup('env', 'DOCKERHUB_TOKEN') }}"
+    #variable to control rollout
+    trigger_rollout: "{{ lookup('env', 'TRIGGER_ROLLOUT') | default('no') }}"
 
   tasks:
   - name: Login to Docker Registry
@@ -47,3 +49,10 @@
       push: yes
       source: local
     when: version_tag != 'latest'
+
+  # rollout command with conditional
+  - name: Restart Kubernetes deployment if needed
+    command: kubectl rollout restart deployment/flask-app-deployment -n testing
+    when:
+    - trigger_rollout == 'yes'
+    - version_tag == 'latest' # Only trigger for latest tag updates

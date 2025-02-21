@@ -11,6 +11,8 @@
     docker_username: "{{ lookup('env', 'DOCKERHUB_USERNAME') }}"
     docker_password: "{{ lookup('env', 'DOCKERHUB_TOKEN') }}"
     build_path: "{{ lookup('env', 'HOME') }}/src" # Ensure this is the correct path
+    #variable to control rollout
+    trigger_rollout: "{{ lookup('env', 'TRIGGER_ROLLOUT') | default('no') }}"
 
   tasks:
   - name: Login to Docker Hub
@@ -20,12 +22,12 @@
   - name: Build Docker Image
     command: >
       docker build -t {{ image_name }}:{{ version_tag }} {{ build_path }}
-      
+
   - name: Tag as Latest (if versioned)
     command: >
       docker tag {{ image_name }}:{{ version_tag }} {{ image_name }}:latest
     when: version_tag != 'latest'
-    
+
   - name: Push Versioned Image
     command: >
       docker push {{ image_name }}:{{ version_tag }}
@@ -34,3 +36,10 @@
     command: >
       docker push {{ image_name }}:latest
     when: version_tag != 'latest'
+
+  # rollout command with conditional
+  - name: Restart Kubernetes deployment if needed
+    command: kubectl rollout restart deployment/flask-app-deployment -n testing
+    when:
+    - trigger_rollout == 'yes'
+    - version_tag == 'latest' # Only trigger for latest tag updates
