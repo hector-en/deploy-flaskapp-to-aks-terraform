@@ -1,5 +1,6 @@
 Main branch builds: 
- - 01: Merged dev into main to update the `latest` tag.
+ - Version 3.0.2: Merged dev into main to update the `latest` tag.
+ - Version 3.0.2: Merged dev into main since I have removed restriction for main branch rollout trigger.
 
 
 Dev branch tags:
