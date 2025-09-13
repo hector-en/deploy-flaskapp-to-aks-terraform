@@ -1,6 +1,8 @@
 # AKS Deployment Platform
 
-A cloud-native application deployed on Azure AKS with automated CI/CD pipelines.  
+
+End-to-end deployment on AKS with automated CI/CD pipelines using Terraform and Kustomize (k8s).  
+
 **Deploy in 5 minutes!**  
 ![image](architecture.jpg)
 ---
