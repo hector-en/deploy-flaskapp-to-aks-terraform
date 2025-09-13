@@ -2,7 +2,7 @@
 
 A cloud-native application deployed on Azure AKS with automated CI/CD pipelines.  
 **Deploy in 5 minutes!**  
-
+![image](architecture.jpg)
 ---
 
 ## 🚀 Overview  
